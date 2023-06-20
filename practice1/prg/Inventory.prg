@@ -1,4 +1,4 @@
-* ´´½¨Êý¾Ý¿â
+* åˆ›å»ºæ•°æ®åº“
 CREATE TABLE "../db/Inventory.dbf" ;
   (ivt_type C(4), ;
    ivt_name C(8), ;
@@ -6,18 +6,18 @@ CREATE TABLE "../db/Inventory.dbf" ;
    ivt_date D)
 
 
-* ´ò¿ªÊý¾Ý¿â
+* æ‰“å¼€æ•°æ®åº“
 *!*	 USE "../db/Inventory.dbf" IN 0
 
-* Íù¿âÖÐ¼Ó30Ìõ¼ÇÂ¼
+* å¾€åº“ä¸­åŠ 30æ¡è®°å½•
 FOR i = 1 TO 30
-  * Ëæ»úÉú³ÉÀàÐÍ
-  tmp_type = IIF(RAND() < 0.2, "Êß²Ë", ;
-           IIF(RAND() < 0.4, "¹ûÆ·", ;
-           IIF(RAND() < 0.6, "ÈâÀà", ;
-           IIF(RAND() < 0.8, "¶³Æ·", "¸É»õ"))))
+  * éšæœºç”Ÿæˆç±»åž‹
+  tmp_type = IIF(RAND() < 0.2, "è”¬èœ", ;
+           IIF(RAND() < 0.4, "æžœå“", ;
+           IIF(RAND() < 0.6, "è‚‰ç±»", ;
+           IIF(RAND() < 0.8, "å†»å“", "å¹²è´§"))))
 
-  * Ëæ»úÉú³ÉÆ·Ãû³¤¶ÈºÍ×Ö·û
+  * éšæœºç”Ÿæˆå“åé•¿åº¦å’Œå­—ç¬¦
   nameLength = INT(RAND()*8) + 1
   chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   tmp_name = ""
@@ -25,15 +25,15 @@ FOR i = 1 TO 30
     tmp_name = tmp_name + SUBSTR(chars, INT(RAND()*26)+1, 1)
   ENDFOR
 
-  * Ëæ»úÉú³ÉÈë¿âÊýÁ¿
+  * éšæœºç”Ÿæˆå…¥åº“æ•°é‡
   tmp_quan = RAND()*(7005.77-1.01) + 1.01
 
-  * Ëæ»úÉú³ÉÈÕÆÚ
+  * éšæœºç”Ÿæˆæ—¥æœŸ
   
   startDate = CTOD("23/05/01")
   tmp_date = startDate + INT(RAND()*61)
 
-  * ²åÈë¼ÇÂ¼
+  * æ’å…¥è®°å½•
   *!*	 INSERT INTO "../db/Inventory.dbf" ;
   *!*	   (ivt_type, ivt_name, ivt_quan, ivt_date) ;
   *!*	   VALUES (tmp_type, tmp_name, tmp_quan, tmp_date)
@@ -55,7 +55,7 @@ SET HOUR TO 24
 
 
 CLOSE DATABASES
-
+CD ..\db
 CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
 INDEX ON ivt_quan TAG ivt_quan
 SET ORDER TO ivt_quan DESCENDING
@@ -63,14 +63,14 @@ SET ORDER TO ivt_quan DESCENDING
 APPEND FROM "..\db\Inventory.dbf" FOR ivt_quan <= 4000
 
 
-@ 2,7 SAY "Æ·Ãû     Èë¿âÊýÁ¿"
+@ 2,7 SAY "å“å     å…¥åº“æ•°é‡"
 
-* ÉèÖÃÊä³öÎ»ÖÃ
+* è®¾ç½®è¾“å‡ºä½ç½®
 LOCAL nRow, nCol
 nRow = 3
 nCol = 7
 
-* Êä³ö¼ÇÂ¼
+* è¾“å‡ºè®°å½•
 SCAN 
   @ nRow, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
   nRow = nRow + 1
@@ -79,76 +79,6 @@ SCAN
   ENDIF
 ENDSCAN
 
-
-* ÒÔÈë¿âÊýÁ¿ÓÉ¸ßµ½µÍÅÅÐò£¬Ñ¡ÔñÊýÁ¿ÔÚ4000ÒÔÏÂµÄ¼ÇÂ¼
-*!*	 SELECT ivt_name, ivt_quan ;
-*!*	   FROM "../db/Inventory.dbf" ;
-*!*	   WHERE ivt_quan <= 4000 ;
-*!*	   ORDER BY ivt_quan DESC INTO CURSOR tmpCursor
-
-*!*	 * ÉèÖÃÊä³öÎ»ÖÃ
-*!*	 @ 2,7 SAY "Æ·Ãû     Èë¿âÊýÁ¿"
-
-*!*	 * Êä³ö¼ÇÂ¼
-*!*	 SCAN 
-*!*	   @ (RECNO()  + 2), 7 SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-*!*	 ENDSCAN
-
-*!*	 * ´´½¨ÁÙÊ±±í²¢ÅÅÐò
-*!*	 CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
-*!*	 INDEX ON ivt_quan TAG ivt_quan
-*!*	 SET ORDER TO ivt_quan DESCENDING
-
-*!*	 DO WHILE RECNO() < RECCOUNT("Inventory")
-*!*	   LOCATE FOR ivt_quan <= 4000
-*!*	   IF FOUND()
-*!*	     COPY TO tmpCursor
-*!*	   ENDIF
-*!*	 ENDDO
-
-*!*	 * ÉèÖÃÊä³öÎ»ÖÃ
-*!*	 @ 2,7 SAY "Æ·Ãû     Èë¿âÊýÁ¿"
-*!*	 * Êä³ö¼ÇÂ¼
-*!*	 SCAN 
-*!*	   @ (RECNO()  + 2), 7 SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-*!*	 ENDSCAN
-
-*!*	 LOCATE FOR ivt_quan <= 4000
-*!*	 IF FOUND()
-*!*	   * ´´½¨ÁÙÊ±±í²¢ÅÅÐò
-*!*	   CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
-*!*	   COPY TO tmpCursor
-*!*	   INDEX ON ivt_quan TAG ivt_quan
-*!*	   SET ORDER TO ivt_quan DESCENDING
-*!*	   * ÉèÖÃÊä³öÎ»ÖÃ
-*!*	   @ 2,7 SAY "Æ·Ãû     Èë¿âÊýÁ¿"
-*!*	   * Êä³ö¼ÇÂ¼
-*!*	   SCAN 
-*!*	     @ (RECNO()  + 2), 7 SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-*!*	   ENDSCAN
-*!*	 ELSE
-*!*	   * Ã»ÓÐ·ûºÏÌõ¼þµÄ¼ÇÂ¼
-*!*	   @ 2,7 SAY "Ã»ÓÐ·ûºÏÌõ¼þµÄ¼ÇÂ¼"
-*!*	 ENDIF
-
-*!*	 CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
-*!*	 INDEX ON ivt_quan TAG ivt_quan
-*!*	 SET ORDER TO ivt_quan DESCENDING
-
-*!*	 APPEND FROM "..\db\Inventory.dbf" FOR ivt_quan <= 4000
-
-*!*	 * ÉèÖÃÊä³öÎ»ÖÃ
-*!*	 @ 2,7 SAY "Æ·Ãû     Èë¿âÊýÁ¿"
-
-*!*	 * Êä³ö¼ÇÂ¼
-*!*	 SCAN 
-*!*	   @ (RECNO()  + 2), 7 SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-*!*	 ENDSCAN
-
-
-
-
-
-* ¹Ø±ÕÊý¾Ý¿â
+* å…³é—­æ•°æ®åº“
 USE IN SELECT("tmpCursor")
 USE IN SELECT("Inventory")
