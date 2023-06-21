@@ -1,69 +1,102 @@
 * Set path to database folder
-SET DEFAULT TO "..\db\"
+cd "D:\Desktop\vfp-practices\practice2\db\"
 
-* Create table A with required fields
-CREATE TABLE A (school_code C(3), school_name C(30))
+* 创建表 A
+CREATE TABLE A (high_code C(3), high_name C(30))
 
-* Generate 200 records with school names
-FOR i = 1 TO 200
-    school_code = PADL(STR(i), 3, "0")
-    school_name = "??? " + school_code + " ??"
-    INSERT INTO A (school_code, school_name) VALUES (school_code, school_name)
+* 生成 200 条记录
+FOR i = 1 TO 200 
+    tmp_code = PADL(i, 3, "0") 
+    tmp_name = "上海第 " + tmp_code + " 中学" 
+    APPEND BLANK 
+    REPLACE NEXT 1 high_code WITH tmp_code
+    REPLACE NEXT 1 high_name WITH tmp_name
 ENDFOR
 
 * Close the table
 USE
 
 * Create table B with required fields
-CREATE TABLE B (university_code C(3), university_name C(30), school_type C(4), admission_plan N(4))
+CREATE TABLE B (univ_code C(3), univ_name C(30), sch_type C(4), adm_plan N(4))
 
 * Manually input 20 records with university names and other details
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("001", "Harvard University", "PU", RAND(1200, 1800))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("002", "Massachusetts Institute of Technology", "PU", RAND(800, 1500))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("003", "Stanford University", "PU", RAND(1000, 2000))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("004", "California Institute of Technology", "PU", RAND(900, 1700))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("005", "University of Oxford", "PU", RAND(1300, 1900))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("006", "University of Cambridge", "PU", RAND(1400, 2000))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("007", "Imperial College London", "PU", RAND(1000, 1500))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("008", "University of Chicago", "PU", RAND(1200, 1800))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("009", "Princeton University", "PU", RAND(1100, 1700))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("010", "University of California, Berkeley", "PU", RAND(1500, 2000))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("011", "Tsinghua University", "PU", RAND(1400, 1900))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("012", "Peking University", "PU", RAND(1300, 1800))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("013", "National University of Singapore", "PU", RAND(900, 1500))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("014", "University of Tokyo", "PU", RAND(1200, 1700))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("015", "Kyoto University", "PU", RAND(1000, 1500))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("016", "University of Melbourne", "PU", RAND(800, 1200))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("017", "University of Sydney", "PU", RAND(1000, 1500))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("018", "University of New South Wales", "PU", RAND(900, 1400))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("019", "Monash University", "PU", RAND(800, 1200))
-INSERT INTO B (university_code, university_name, school_type, admission_plan) VALUES ("020", "University of Queensland", "PU", RAND(1100, 1700))
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("001", "Harvard University", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("002", "Massachusetts Institute of Technology", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("003", "Stanford University", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("004", "California Institute of Technology", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("005", "University of Oxford", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("006", "University of Cambridge", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("007", "Imperial College London", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("008", "University of Chicago", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("009", "Princeton University", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("010", "University of California, Berkeley", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("011", "Tsinghua University", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("012", "Peking University", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("013", "National University of Singapore", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("014", "University of Tokyo", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("015", "Kyoto University", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("016", "University of Melbourne", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("017", "University of Sydney", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("018", "University of New South Wales", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("019", "Monash University", "PU", RAND()*1200+801)
+INSERT INTO B (univ_code, univ_name, sch_type, adm_plan) VALUES ("020", "University of Queensland", "PU", RAND()*1200+801)
 
 * Close the table
 USE
 
- * Create table C with required fields
-CREATE TABLE C (exam_id C(8), name C(8), id_card C(18), high_school_code C(3), first_choice C(3), second_choice C(3), third_choice C(3))
- * Generate 80,000 records with student information and their university choices
+* 创建表 C
+CREATE TABLE C (exam_id C(8), name C(8), id_card C(18), high_code C(3), first_choice C(3), second_choice C(3), third_choice C(3))
+
 FOR i = 1 TO 80000
     * Generate unique exam ID and ID card number
     DO WHILE .T.
-        exam_id = PADL(STR(RAND(10000000, 99999999)), 8, "0")
-        id_card = PADL(STR(RAND(100000000000000000, 999999999999999999)), 18, "0")
-        IF NOT USED("C") AND NOT SEEK(exam_id, "C", "exam_id") AND NOT SEEK(id_card, "C", "id_card")
+        chars = "0123456789"
+        tmp_exam_id = ""
+        tmp_id_card =""
+        FOR i = 1 TO 8
+            tmp_exam_id = tmp_exam_id + SUBSTR(chars, INT(RAND()*10)+1, 1)
+        ENDFOR
+        FOR i = 1 TO 18
+            tmp_id_card = tmp_id_card + SUBSTR(chars, INT(RAND()*10)+1, 1)
+        ENDFOR
+        SET INDEX ON exam_id, id_card TAG tmp_exam_id
+        IF NOT USED("C") AND NOT SEEK(tmp_exam_id, "C", "exam_id") AND NOT SEEK(tmp_id_card, "C", "id_card")
             EXIT
         ENDIF
     ENDDO
-    * Randomly select high school code from table A
-    SELECT A
-    high_school_code = A.high_school_code[RAND(RECCOUNT("A")) + 1]
-    * Randomly select up to three university choices from table B
+    * 使用Append From命令将表A中的`high_code`字段追加到表C中
+    APPEND FROM A FIELDS high_code
+    * 三个志愿大学的代码从表 B 中取，每个学生至少有一个志愿，最多三个志愿，依次填入相应字段，没有为空；
     SELECT B
-    first_choice = B.university_code[RAND(RECCOUNT("B")) + 1]
-    second_choice = IIF(RAND() > 0.5, B.university_code[RAND(RECCOUNT("B")) + 1], "")
-    third_choice = IIF(RAND() > 0.7, B.university_code[RAND(RECCOUNT("B")) + 1], "")
-    * Insert record into table C
-    INSERT INTO C (exam_id, name, id_card, high_school_code, first_choice, second_choice, third_choice) VALUES (exam_id, "Student" + LTRIM(STR(i)), id_card, high_school_code, first_choice, second_choice, third_choice)
+    * 从表B中随机挑选一个大学代码并赋值给一个变量
+    total = RECCOUNT()
+    rand_idx = INT(RAND()*total) + 1
+    GO rand_idx
+    first_choice = univ_code
+    SKIP
+    second_choice = univ_code
+    SKIP
+    third_choice = univ_code
+    APPEND BLANK
+    REPLACE NEXT 1 ;
+        exam_id WITH tmp_exam_id, ;
+        name WITH "Student" + LTRIM(STR(i)), ;
+        id_card WITH tmp_id_card, ;
+        first_choice WITH first_choice, ;
+        second_choice WITH second_choice, ;
+        third_choice WITH third_choice
+
+    *!*	 * Randomly select high school code from table A
+    *!*	 SELECT A
+    *!*	 tmp_code = A.high_code[RAND(RECCOUNT("A")) + 1]
+    *!*	 * Randomly select up to three university choices from table B
+    *!*	 SELECT B
+    *!*	 first_choice = B.univ_code[RAND(RECCOUNT("B")) + 1]
+    *!*	 second_choice = IIF(RAND() > 0.5, B.univ_code[RAND(RECCOUNT("B")) + 1], "")
+    *!*	 third_choice = IIF(RAND() > 0.7, B.univ_code[RAND(RECCOUNT("B")) + 1], "")
+    *!*	 * Insert record into table C
+    *!*	 INSERT INTO C (exam_id, name, id_card, high_sch_code, first_choice, second_choice, third_choice) 
+    *!*	 VALUES (exam_id, "Student" + LTRIM(STR(i)), id_card, high_sch_code, first_choice, second_choice, third_choice)
 ENDFOR
  * Close the table
 USE

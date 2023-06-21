@@ -1,4 +1,4 @@
-* ´´½¨Êý¾Ý¿â
+* åˆ›å»ºæ•°æ®åº“
 CREATE TABLE "../db/Inventory.dbf" ;
   (ivt_type C(4), ;
    ivt_name C(8), ;
@@ -6,18 +6,18 @@ CREATE TABLE "../db/Inventory.dbf" ;
    ivt_date D)
 
 
-* ´ò¿ªÊý¾Ý¿â
+* æ‰“å¼€æ•°æ®åº“
 *!*	 USE "../db/Inventory.dbf" IN 0
 
-* Íù¿âÖÐ¼Ó30Ìõ¼ÇÂ¼
+* å¾€åº“ä¸­åŠ 30æ¡è®°å½•
 FOR i = 1 TO 30
-  * Ëæ»úÉú³ÉÀàÐÍ
-  tmp_type = IIF(RAND() < 0.2, "Êß²Ë", ;
-           IIF(RAND() < 0.4, "¹ûÆ·", ;
-           IIF(RAND() < 0.6, "ÈâÀà", ;
-           IIF(RAND() < 0.8, "¶³Æ·", "¸É»õ"))))
+  * éšæœºç”Ÿæˆç±»åž‹
+  tmp_type = IIF(RAND() < 0.2, "è”¬èœ", ;
+           IIF(RAND() < 0.4, "æžœå“", ;
+           IIF(RAND() < 0.6, "è‚‰ç±»", ;
+           IIF(RAND() < 0.8, "å†»å“", "å¹²è´§"))))
 
-  * Ëæ»úÉú³ÉÆ·Ãû³¤¶ÈºÍ×Ö·û
+  * éšæœºç”Ÿæˆå“åé•¿åº¦å’Œå­—ç¬¦
   nameLength = INT(RAND()*8) + 1
   chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   tmp_name = ""
@@ -25,18 +25,18 @@ FOR i = 1 TO 30
     tmp_name = tmp_name + SUBSTR(chars, INT(RAND()*26)+1, 1)
   ENDFOR
 
-  * Ëæ»úÉú³ÉÈë¿âÊýÁ¿
+  * éšæœºç”Ÿæˆå…¥åº“æ•°é‡
   tmp_quan = RAND()*(7005.77-1.01) + 1.01
 
-  * Ëæ»úÉú³ÉÈÕÆÚ
+  * éšæœºç”Ÿæˆæ—¥æœŸ
   
   startDate = CTOD("23/05/01")
   tmp_date = startDate + INT(RAND()*61)
 
-  * ²åÈë¼ÇÂ¼
-  INSERT INTO "../db/Inventory.dbf" ;
-    (ivt_type, ivt_name, ivt_quan, ivt_date) ;
-    VALUES (tmp_type, tmp_name, tmp_quan, tmp_date)
+  * æ’å…¥è®°å½•
+  *!*	 INSERT INTO "../db/Inventory.dbf" ;
+  *!*	   (ivt_type, ivt_name, ivt_quan, ivt_date) ;
+  *!*	   VALUES (tmp_type, tmp_name, tmp_quan, tmp_date)
   APPEND BLANK
   REPLACE NEXT 1 ivt_type WITH tmp_type, ivt_name WITH tmp_name, ;
           ivt_quan WITH tmp_quan, ivt_date WITH tmp_date
@@ -63,14 +63,14 @@ SET ORDER TO ivt_quan DESCENDING
 APPEND FROM "..\db\Inventory.dbf" FOR ivt_quan <= 4000
 
 
-@ 2,7 SAY "Æ·Ãû     Èë¿âÊýÁ¿"
+@ 2,7 SAY "å“å     å…¥åº“æ•°é‡"
 
-* ÉèÖÃÊä³öÎ»ÖÃ
+* è®¾ç½®è¾“å‡ºä½ç½®
 LOCAL nRow, nCol
 nRow = 3
 nCol = 7
 
-* Êä³ö¼ÇÂ¼
+* è¾“å‡ºè®°å½•
 SCAN 
   @ nRow, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
   nRow = nRow + 1
@@ -79,6 +79,6 @@ SCAN
   ENDIF
 ENDSCAN
 
-* ¹Ø±ÕÊý¾Ý¿â
+* å…³é—­æ•°æ®åº“
 USE IN SELECT("tmpCursor")
 USE IN SELECT("Inventory")
