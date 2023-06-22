@@ -1,0 +1,7 @@
+select B
+scan
+	?univ_code
+	select C
+	?pass_num
+	skip
+endscan

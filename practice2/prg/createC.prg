@@ -1,16 +1,15 @@
 * create table c
-CREATE TABLE C (pass_num C(8), name C(8), id_card C(18), high_code C(3), volu1 C(3), volu2 C(3), volu3 C(3))
+CREATE TABLE ..\db\C (pass_num C(8), name C(8), id_card C(18), high_code C(3), volu1 C(3), volu2 C(3), volu3 C(3))
 INDEX ON pass_num TAG pass_num
 INDEX ON id_card TAG id_card
 
-*!*	 USE C IN 0
-FOR i = 1 TO 200
-    m.pass_num = ""
-    m.id_card = ""
-    m.high_code = ""
-    m.volu1 = ""
-    m.volu2 = ""
-    m.volu3 = ""
+FOR i = 1 TO 10
+    *!*	 m.pass_num = ""
+    *!*	 m.id_card = ""
+    *!*	 m.high_code = ""
+    *!*	 m.volu1 = ""
+    *!*	 m.volu2 = ""
+    *!*	 m.volu3 = ""
     * get a random high school code from table A
     USE A IN 1
     SELECT 1
@@ -29,44 +28,25 @@ FOR i = 1 TO 200
     LOCATE FOR RECN() = MOD(m.rand_rec + 2, RECC())
     m.volu3 = univ_code
 
-    * unique mark
-    m.unique = .F.
-    DO WHILE !m.unique
-        * randomly generate exam ID and ID card number
+
+    DO WHILE .T.
         chars = "0123456789"
-        FOR i = 1 TO 8
+        FOR j = 1 TO 8
             m.pass_num = m.pass_num + SUBSTR(chars, INT(RAND()*10)+1, 1)
         ENDFOR
-        FOR i = 1 TO 18
+        FOR k = 1 TO 18
             m.id_card = m.id_card + SUBSTR(chars, INT(RAND()*10)+1, 1)
         ENDFOR
-        SELECT C
-        * check if the pass number and ID card number are unique
-        SET ORDER TO pass_num
-        SEEK m.pass_num
-        IF FOUND()
-            LOOP
-        ENDIF
-        SET ORDER TO id_card
-        SEEK m.id_card
-        IF FOUND()
-            LOOP
-        ENDIF
 
-        *!*	 SET ORDER TO pass_num
-        *!*	 IF SEEK(tmp_pass_num, "C")
-        *!*	     LOOP
-        *!*	 ENDIF
-        *!*	 SET ORDER TO id_card
-        *!*	 IF SEEK(tmp_id_card, "C")
-        *!*	     LOOP
-        *!*	 ENDIF
-        m.unique = .T.
+        IF SEEK(m.pass_num, "C", "pass_num") .OR. SEEK(m.id_card, "C", "id_card")
+            LOOP
+        ENDIF
+        EXIT
     ENDDO
 
-    *!*	 SELECT C 
+	SELECT C
     APPEND BLANK
-    * RAND(RECCOUNT("B")) + 1
+
     REPLACE pass_num WITH m.pass_num, ;
         name WITH "Student" + LTRIM(STR(i)), ;
         id_card WITH m.id_card, ;
@@ -74,102 +54,8 @@ FOR i = 1 TO 200
         volu1 WITH m.volu1, ;
         volu2 WITH m.volu2, ;
         volu3 WITH m.volu3
-    *!*	 * Generate unique exam ID and ID card number
-    *!*	 DO WHILE .T.
-    *!*	     chars = "0123456789"
-    *!*	     tmp_pass_num = ""
-    *!*	     tmp_id_card =""
-    *!*	     FOR i = 1 TO 8
-    *!*	         tmp_exam_id = tmp_exam_id + SUBSTR(chars, INT(RAND()*10)+1, 1)
-    *!*	     ENDFOR
-    *!*	     FOR i = 1 TO 18
-    *!*	         tmp_id_card = tmp_id_card + SUBSTR(chars, INT(RAND()*10)+1, 1)
-    *!*	     ENDFOR
+    ENDFOR
 
-    *!*	     *!*	 IF NOT USED("C") AND NOT SEEK(tmp_exam_id, "C", pass_num) AND NOT SEEK(tmp_id_card, "C", id_card)
-    *!*	     IF  !SEEK(tmp_pass_num, "C", "pass_num") AND !SEEK(tmp_id_card, "C", "id_card")
-    *!*	         EXIT
-    *!*	     ENDIF
-    *!*	 ENDDO
-
-    *!*	 APPEND FROM A FIELDS high_code
-
-    *!*	 SELECT B
-
-    *!*	 total = RECCOUNT()
-    *!*	 rand_idx = INT(RAND()*total) + 1
-    *!*	 GO rand_idx
-    *!*	 volu1 = univ_code
-    *!*	 SKIP
-    *!*	 volu2 = univ_code
-    *!*	 SKIP
-    *!*	 volu3 = univ_code
-    *!*	 APPEND BLANK
-    *!*	 REPLACE NEXT 1 ;
-    *!*	     pass_num WITH tmp_exam_id, ;
-    *!*	     name WITH "Student" + LTRIM(STR(i)), ;
-    *!*	     id_card WITH tmp_id_card, ;
-    *!*	     volu1 WITH volu1, ;
-    *!*	     volu2 WITH volu2, ;
-    *!*	     volu3 WITH volu3
-
-    *!*	 * Randomly select high school code from table A
-    *!*	 SELECT A
-    *!*	 tmp_code = A.high_code[RAND(RECCOUNT("A")) + 1]
-    *!*	 * Randomly select up to three university choices from table B
-    *!*	 SELECT B
-    *!*	 volu1 = B.univ_code[RAND(RECCOUNT("B")) + 1]
-    *!*	 volu2 = IIF(RAND() > 0.5, B.univ_code[RAND(RECCOUNT("B")) + 1], "")
-    *!*	 volu3 = IIF(RAND() > 0.7, B.univ_code[RAND(RECCOUNT("B")) + 1], "")
-    *!*	 * Insert record into table C
-    *!*	 INSERT INTO C (pass_num, name, id_card, high_sch_code, volu1, volu2, volu3) 
-    *!*	 VALUES (pass_num, "Student" + LTRIM(STR(i)), id_card, high_sch_code, volu1, volu2, volu3)
-ENDFOR
- * Close the table
+* Close the table
 USE
 
-*!*	 CD ..\db
-*!*	 * Load secondary school name codes from Table A
-*!*	 USE A IN 0
-*!*	 LOCAL laSchoolCodes[1]
-*!*	 DIMENSION laSchoolCodes[RECCOUNT("A")]
-*!*	 SCAN
-*!*	     laSchoolCodes[RECNO()] = A.high_code
-*!*	 ENDSCAN
-*!*	  * Load university codes from Table B
-*!*	 USE B IN 0
-*!*	 LOCAL laUniCodes[1]
-*!*	 DIMENSION laUniCodes[RECCOUNT("B")]
-*!*	 SCAN
-*!*	     laUniCodes[RECNO()] = B.uni_code
-*!*	 ENDSCAN
-*!*	  * Set up variables
-*!*	 LOCAL lcPassNo, lcName, lcID, lcSchoolCode, lcFirstChoice, lcSecondChoice, lcThirdChoice
-*!*	  * Create table C
-*!*	 CREATE TABLE C (pass_no C(8), name C(8), ID C(18), high_code C(3), first_choice C(3), second_choice C(3), third_choice C(3))
-*!*	  * Loop through 80,000 students
-*!*	 FOR lnCount = 1 TO 80000
-*!*	     * Generate unique pass number and ID number
-*!*	     DO WHILE .T.
-*!*	         lcPassNo = STR(RAND(1) * 100000000, 8)
-*!*	         lcID = STR(RAND(1) * 100000000000000000, 18)
-*!*	         IF NOT USED("C", "pass_no='" + lcPassNo + "' OR ID='" + lcID + "'")
-*!*	             EXIT
-*!*	         ENDIF
-*!*	     ENDDO
-*!*	      * Select a random secondary school name code
-*!*	     lcSchoolCode = laSchoolCodes[INT(RAND(1) * A.RECCOUNT()) + 1]
-*!*	      * Select a random number of universities between 1 and 3
-*!*	     lnNumUnis = INT(RAND(1) * 3) + 1
-*!*	      * Select random university codes
-*!*	     lcFirstChoice = laUniCodes[INT(RAND(1) * B.RECCOUNT()) + 1]
-*!*	     lcSecondChoice = IIF(lnNumUnis > 1, laUniCodes[INT(RAND(1) * B.RECCOUNT()) + 1], "")
-*!*	     lcThirdChoice = IIF(lnNumUnis > 2, laUniCodes[INT(RAND(1) * B.RECCOUNT()) + 1], "")
-*!*	      * Append record to table C
-*!*	     APPEND BLANK
-*!*	     REPLACE pass_no WITH lcPassNo, name WITH "Name" + LTRIM(STR(lnCount)), ID WITH lcID, high_code WITH lcSchoolCode, first_choice WITH lcFirstChoice, second_choice WITH lcSecondChoice, third_choice WITH lcThirdChoice
-*!*	 NEXT lnCount
-*!*	  * Close tables
-*!*	 USE IN C
-*!*	 USE IN A
-*!*	 USE IN B

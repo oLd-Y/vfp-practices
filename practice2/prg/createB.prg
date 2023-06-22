@@ -1,4 +1,4 @@
-CREATE TABLE B (univ_code C(3), univ_name C(30), sch_type C(4), adm_plan N(4))
+CREATE TABLE ..\db\B (univ_code C(3), univ_name C(30), sch_type C(4), adm_plan N(4))
 
 FOR i = 1 TO 20
     APPEND BLANK

@@ -1,4 +1,4 @@
-CREATE TABLE A (high_code C(3), high_name C(30))
+CREATE TABLE ..\db\A (high_code C(3), high_name C(30))
 
 * 生成 200 条记录
 FOR i = 1 TO 200 
