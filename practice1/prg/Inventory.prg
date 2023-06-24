@@ -1,5 +1,6 @@
+cd D:\Desktop\vfp-practices\practice1\db
 * 创建数据库
-CREATE TABLE "../db/Inventory.dbf" ;
+CREATE TABLE Inventory ;
   (ivt_type C(4), ;
    ivt_name C(8), ;
    ivt_quan N(8,2), ;
@@ -10,7 +11,7 @@ CREATE TABLE "../db/Inventory.dbf" ;
 *!*	 USE "../db/Inventory.dbf" IN 0
 
 * 往库中加30条记录
-FOR i = 1 TO 30
+FOR i = 1 TO 300
   * 随机生成类型
   tmp_type = IIF(RAND() < 0.2, "蔬菜", ;
            IIF(RAND() < 0.4, "果品", ;
@@ -60,7 +61,7 @@ CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
 INDEX ON ivt_quan TAG ivt_quan
 SET ORDER TO ivt_quan DESCENDING
 
-APPEND FROM "..\db\Inventory.dbf" FOR ivt_quan <= 4000
+APPEND FROM Inventory.dbf FOR ivt_quan <= 4000
 
 
 @ 2,7 SAY "品名     入库数量"

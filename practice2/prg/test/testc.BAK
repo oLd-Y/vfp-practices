@@ -1,34 +1,48 @@
+cd D:\Desktop\vfp-practices\practice2\db\
 * create table c
-CREATE TABLE ..\db\C (pass_num C(8), name C(8), id_card C(18), high_code C(3), volu1 C(3), volu2 C(3), volu3 C(3))
+CREATE TABLE  C (pass_num C(8), name C(8), id_card C(18), high_code C(3), volu1 C(3), volu2 C(3), volu3 C(3))
 INDEX ON pass_num TAG pass_num
 INDEX ON id_card TAG id_card
 
-FOR i = 1 TO 10
+USE A IN 1
+USE B IN 2
+
+RAND(-1)
+FOR i = 1 TO 20
     *!*	 m.pass_num = ""
     *!*	 m.id_card = ""
     *!*	 m.high_code = ""
     *!*	 m.volu1 = ""
     *!*	 m.volu2 = ""
     *!*	 m.volu3 = ""
+	
+	
     * get a random high school code from table A
-    USE A IN 1
     SELECT 1
-    LOCATE FOR RECN() = (RAND() * RECC()) + 1 
+    *!*	 USE A
+    *!*	 ?RECC()
+    LOCATE FOR RECN() = (INT(RAND() * RECC()) + 1)
     m.high_code = high_code
     * get 3 random university codes from table B
-    USE B IN 2
     SELECT 2
-    STORE (RAND() * RECC()) + 1 TO m.rand_rec
+    *!*	 USE B
+    *!*	 ?RECC()
+    STORE INT(RAND() * RECC()) + 1 TO m.rand_rec1
+    *!*	 LOCATE FOR RECN() = INT(RAND() * RECC()) + 1
     LOCATE FOR RECN() = m.rand_rec
+    *!*	 ? m.rand_rec
+    STORE INT(RAND() * RECC()) + 1 TO m.rand_rec2 
     m.volu1 = univ_code
-    GO TOP
-    LOCATE FOR RECN() = MOD(m.rand_rec + 1, RECC())
+    LOCATE FOR RECN() = MOD(INT(RAND() * RECC()) + 1, RECC()) + 1
     m.volu2 = univ_code
-    GO TOP
-    LOCATE FOR RECN() = MOD(m.rand_rec + 2, RECC())
+    STORE INT(RAND() * RECC()) + 1 TO m.rand_rec3
+    LOCATE FOR RECN() = MOD(INT(RAND() * RECC()) + 1, RECC()) + 2
     m.volu3 = univ_code
 
-
+	SELECT C
+	USE C
+    m.pass_num = ""
+    m.id_card = ""
     DO WHILE .T.
         chars = "0123456789"
         FOR j = 1 TO 8
@@ -41,6 +55,7 @@ FOR i = 1 TO 10
         IF SEEK(m.pass_num, "C", "pass_num") .OR. SEEK(m.id_card, "C", "id_card")
             LOOP
         ENDIF
+        SET ORDER TO
         EXIT
     ENDDO
 
@@ -54,8 +69,10 @@ FOR i = 1 TO 10
         volu1 WITH m.volu1, ;
         volu2 WITH m.volu2, ;
         volu3 WITH m.volu3
-    ENDFOR
+ENDFOR
 
-* Close the table
-USE
-
+*!*	 USE IN select("A")
+*!*	 USE IN select("B")
+*!*	 USE IN select("C")
+*!*	 CLEAR
+LIST
