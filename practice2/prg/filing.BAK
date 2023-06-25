@@ -104,6 +104,9 @@ FOR i = 1 TO 20
         volu3 WITH m.volu3
 ENDFOR
 
+USE IN select("A")
+USE IN select("B")
+USE IN select("C")
 *!*	 CLEAR
 *!*	 LIST
 
