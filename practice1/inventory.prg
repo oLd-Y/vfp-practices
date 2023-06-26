@@ -8,12 +8,11 @@ SET STATUS OFF
 *!*	 SET STAT BAR OFF
 SET SAFETY OFF
 
-m.db_path = "D:\Desktop\vfp-practices\practice1\db\"
-
-SELECT 0
-IF(!USED(m.db_path + "Inventory"))
-  USE m.db_path + "Inventory" in 0
+IF(!USED("Inventory"))
+  USE Inventory in 0 ALIAS Inventory
 ENDIF
+SELECT Inventory
+
 
 * 往库中加30条记录
 FOR i = 1 TO 30
@@ -40,14 +39,12 @@ FOR i = 1 TO 30
   tmp_date = startDate + INT(RAND()*61)
 
   * 插入记录
-  *!*	 INSERT INTO "../db/Inventory.dbf" ;
-  *!*	   (ivt_type, ivt_name, ivt_quan, ivt_date) ;
-  *!*	   VALUES (tmp_type, tmp_name, tmp_quan, tmp_date)
   APPEND BLANK
   REPLACE NEXT 1 ivt_type WITH tmp_type, ivt_name WITH tmp_name, ;
           ivt_quan WITH tmp_quan, ivt_date WITH tmp_date
-  SET ORDER TO ivt_quan
 NEXT
+
+SET ORDER TO ivt_quan DESC
 
 
 *!*	 CLOSE DATABASES
@@ -77,17 +74,18 @@ NEXT
 
 * 设置输出位置
 LOCAL nRow, nCol
-nRow = 2
+nRow = 1
 nCol = 7
 
-offset = 0
+offset = 1
 * 输出记录
 SCAN 
-  @ RECN() + 2 + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-  IF MOD(RECN(), 3) = 1
+  @ nRow + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
+  nRow = nRow + 1
+  IF MOD(nRow + 1, 3) = 1
     offset = offset + 1
-    ENDIF
+  ENDIF
 ENDSCAN
+
 * 关闭数据库
-USE IN SELECT("tmpCursor")
 USE IN SELECT("Inventory")

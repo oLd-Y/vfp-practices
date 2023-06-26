@@ -1,18 +1,18 @@
 SET MARK TO "-"
 SET DATE TO ANSI
 SET HOUR TO 24
-*!*	 SET DELE ON
-*!*	 SET CENT ON
-*!*	 SET TALK OFF
-*!*	 SET STATUS OFF
+SET DELE ON
+SET CENT ON
+SET TALK OFF
+SET STATUS OFF
 *!*	 SET STAT BAR OFF
-*!*	 SET SAFETY OFF
+SET SAFETY OFF
 
-m.db_path = "D:\Desktop\vfp-practices\practice1\db\"
+m.db_path = "D:\\Desktop\\vfp-practices\\practice1\\db\\"
 
-IF(!USED(m.db_path + "Inventory"))
-  USE m.db_path + "Inventory" in 0
-  SELECT m.db_path + "Inventory"
+SELECT 0
+IF(!USED("Inventory"))
+  USE ..\db\Inventory in 0
 ENDIF
 
 * 往库中加30条记录
@@ -48,14 +48,16 @@ FOR i = 1 TO 30
           ivt_quan WITH tmp_quan, ivt_date WITH tmp_date
 NEXT
 
+SET ORDER TO ivt_quan DESC
 
-CLOSE DATABASES
-CD ..\db
-CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
-INDEX ON ivt_quan TAG ivt_quan
-SET ORDER TO ivt_quan DESCENDING
 
-APPEND FROM Inventory.dbf FOR ivt_quan  <= 4000
+*!*	 CLOSE DATABASES
+*!*	 CD ..\db
+*!*	 CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
+*!*	 INDEX ON ivt_quan TAG ivt_quan
+*!*	 SET ORDER TO ivt_quan DESCENDING
+
+*!*	 APPEND FROM Inventory.dbf FOR ivt_quan  <= 4000
 
 
 *!*	 @ 2,7 SAY "品名     入库数量"
@@ -79,13 +81,13 @@ LOCAL nRow, nCol
 nRow = 2
 nCol = 7
 
+offset = 0
 * 输出记录
 SCAN 
-  @ nRow, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-  nRow = nRow + 1
-  IF MOD(nRow, 3) = 2
-    nRow = nRow + 1
-  ENDIF
+  @ RECN() + 2 + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
+  IF MOD(RECN(), 3) = 1
+    offset = offset + 1
+    ENDIF
 ENDSCAN
 * 关闭数据库
 USE IN SELECT("tmpCursor")
