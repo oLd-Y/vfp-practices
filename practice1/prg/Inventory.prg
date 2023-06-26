@@ -1,24 +1,29 @@
-cd D:\Desktop\vfp-practices\practice1\db
-* åˆ›å»ºæ•°æ®åº“
-CREATE TABLE Inventory ;
-  (ivt_type C(4), ;
-   ivt_name C(8), ;
-   ivt_quan N(8,2), ;
-   ivt_date D)
+SET MARK TO "-"
+SET DATE TO ANSI
+SET HOUR TO 24
+SET DELE ON
+SET CENT ON
+SET TALK OFF
+SET STATUS OFF
+*!*	 SET STAT BAR OFF
+SET SAFETY OFF
 
+m.db_path = "D:\Desktop\vfp-practices\practice1\db\"
 
-* æ‰“å¼€æ•°æ®åº“
-*!*	 USE "../db/Inventory.dbf" IN 0
+SELECT 0
+IF(!USED(m.db_path + "Inventory"))
+  USE m.db_path + "Inventory" in 0
+ENDIF
 
-* å¾€åº“ä¸­åŠ 30æ¡è®°å½•
-FOR i = 1 TO 300
-  * éšæœºç”Ÿæˆç±»å‹
-  tmp_type = IIF(RAND() < 0.2, "è”¬èœ", ;
-           IIF(RAND() < 0.4, "æœå“", ;
-           IIF(RAND() < 0.6, "è‚‰ç±»", ;
-           IIF(RAND() < 0.8, "å†»å“", "å¹²è´§"))))
+* Íù¿âÖĞ¼Ó30Ìõ¼ÇÂ¼
+FOR i = 1 TO 30
+  * Ëæ»úÉú³ÉÀàĞÍ
+  tmp_type = IIF(RAND() < 0.2, "Êß²Ë", ;
+           IIF(RAND() < 0.4, "¹ûÆ·", ;
+           IIF(RAND() < 0.6, "ÈâÀà", ;
+           IIF(RAND() < 0.8, "¶³Æ·", "¸É»õ"))))
 
-  * éšæœºç”Ÿæˆå“åé•¿åº¦å’Œå­—ç¬¦
+  * Ëæ»úÉú³ÉÆ·Ãû³¤¶ÈºÍ×Ö·û
   nameLength = INT(RAND()*8) + 1
   chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   tmp_name = ""
@@ -26,60 +31,63 @@ FOR i = 1 TO 300
     tmp_name = tmp_name + SUBSTR(chars, INT(RAND()*26)+1, 1)
   ENDFOR
 
-  * éšæœºç”Ÿæˆå…¥åº“æ•°é‡
+  * Ëæ»úÉú³ÉÈë¿âÊıÁ¿
   tmp_quan = RAND()*(7005.77-1.01) + 1.01
 
-  * éšæœºç”Ÿæˆæ—¥æœŸ
+  * Ëæ»úÉú³ÉÈÕÆÚ
   
   startDate = CTOD("23/05/01")
   tmp_date = startDate + INT(RAND()*61)
 
-  * æ’å…¥è®°å½•
+  * ²åÈë¼ÇÂ¼
   *!*	 INSERT INTO "../db/Inventory.dbf" ;
   *!*	   (ivt_type, ivt_name, ivt_quan, ivt_date) ;
   *!*	   VALUES (tmp_type, tmp_name, tmp_quan, tmp_date)
   APPEND BLANK
   REPLACE NEXT 1 ivt_type WITH tmp_type, ivt_name WITH tmp_name, ;
           ivt_quan WITH tmp_quan, ivt_date WITH tmp_date
+  SET ORDER TO ivt_quan
 NEXT
 
-SET MARK TO "-"
-SET DATE TO ANSI
-SET HOUR TO 24
-*!*	 SET DELE ON
-*!*	 SET CENT ON
-*!*	 SET TALK OFF
-*!*	 SET STATUS OFF
-*!*	 SET STAT BAR OFF
-*!*	 SET SAFETY OFF
+
+*!*	 CLOSE DATABASES
+*!*	 CD ..\db
+*!*	 CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
+*!*	 INDEX ON ivt_quan TAG ivt_quan
+*!*	 SET ORDER TO ivt_quan DESCENDING
+
+*!*	 APPEND FROM Inventory.dbf FOR ivt_quan  <= 4000
 
 
+*!*	 @ 2,7 SAY "Æ·Ãû     Èë¿âÊıÁ¿"
 
-CLOSE DATABASES
-CD ..\db
-CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
-INDEX ON ivt_quan TAG ivt_quan
-SET ORDER TO ivt_quan DESCENDING
+*!*	 * ÉèÖÃÊä³öÎ»ÖÃ
+*!*	 LOCAL nRow, nCol
+*!*	 nRow = 3
+*!*	 nCol = 7
 
-APPEND FROM Inventory.dbf FOR ivt_quan <= 4000
+*!*	 * Êä³ö¼ÇÂ¼
+*!*	 SCAN 
+*!*	   @ nRow, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
+*!*	   nRow = nRow + 1
+*!*	   IF MOD(nRow - 2, 4) = 0
+*!*	     nRow = nRow + 1
+*!*	   ENDIF
+*!*	 ENDSCAN
 
-
-@ 2,7 SAY "å“å     å…¥åº“æ•°é‡"
-
-* è®¾ç½®è¾“å‡ºä½ç½®
+* ÉèÖÃÊä³öÎ»ÖÃ
 LOCAL nRow, nCol
-nRow = 3
+nRow = 2
 nCol = 7
 
-* è¾“å‡ºè®°å½•
+offset = 0
+* Êä³ö¼ÇÂ¼
 SCAN 
-  @ nRow, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-  nRow = nRow + 1
-  IF MOD(nRow - 2, 4) = 0
-    nRow = nRow + 1
-  ENDIF
+  @ RECN() + 2 + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
+  IF MOD(RECN(), 3) = 1
+    offset = offset + 1
+    ENDIF
 ENDSCAN
-
-* å…³é—­æ•°æ®åº“
+* ¹Ø±ÕÊı¾İ¿â
 USE IN SELECT("tmpCursor")
 USE IN SELECT("Inventory")
