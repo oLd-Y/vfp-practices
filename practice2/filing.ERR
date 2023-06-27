@@ -1,12 +1,12 @@
 USE IN A
-第 262 行发生错误: 语句不在过程中。
-USE IN B
-第 263 行发生错误: 语句不在过程中。
-USE IN C
 第 264 行发生错误: 语句不在过程中。
-USE IN D
+USE IN B
 第 265 行发生错误: 语句不在过程中。
-CLOSE DATABASES
+USE IN C
+第 266 行发生错误: 语句不在过程中。
+USE IN D
 第 267 行发生错误: 语句不在过程中。
-cd ..\prg
+CLOSE DATABASES
 第 269 行发生错误: 语句不在过程中。
+cd ..\prg
+第 271 行发生错误: 语句不在过程中。
