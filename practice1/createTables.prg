@@ -4,4 +4,3 @@ CREATE TABLE Inventory ;
    ivt_quan N(8,2), ;
    ivt_date D)
 
-INDEX ON ivt_quan TAG ivt_quan DESC

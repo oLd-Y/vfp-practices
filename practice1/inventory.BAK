@@ -7,14 +7,19 @@ SET TALK OFF
 SET STATUS OFF
 *!*	 SET STAT BAR OFF
 SET SAFETY OFF
+SET EXCL OFF
 
-m.db_path = "D:\\Desktop\\vfp-practices\\practice1\\db\\"
+CLOSE DATABASES
+CLEAR ALL && clear variables
 
-SELECT 0
-IF(!USED("Inventory"))
-  USE ..\db\Inventory in 0
-ENDIF
+m.path = "D:\Desktop\vfp-practices\practice1"
+USE m.path + "\Inventory" exclusive
 
+zap
+
+
+m.t_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+startDate = CTOD("23/05/01")
 * 往库中加30条记录
 FOR i = 1 TO 30
   * 随机生成类型
@@ -24,11 +29,17 @@ FOR i = 1 TO 30
            IIF(RAND() < 0.8, "冻品", "干货"))))
 
   * 随机生成品名长度和字符
-  nameLength = INT(RAND()*8) + 1
-  chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  DO WHILE .T.
+    m.nameLength = INT(RAND()*8) + 1
+    IF BETWEEN(m.nameLength, 1, 8) 
+      EXIT
+    ENDIF
+  ENDDO
+
+  
   tmp_name = ""
-  FOR j = 1 TO nameLength
-    tmp_name = tmp_name + SUBSTR(chars, INT(RAND()*26)+1, 1)
+  FOR j = 1 TO m.nameLength
+    tmp_name = tmp_name + SUBSTR(m.chars, INT(RAND()*26)+1, 1)
   ENDFOR
 
   * 随机生成入库数量
@@ -36,20 +47,32 @@ FOR i = 1 TO 30
 
   * 随机生成日期
   
-  startDate = CTOD("23/05/01")
+
   tmp_date = startDate + INT(RAND()*61)
 
   * 插入记录
-  *!*	 INSERT INTO "../db/Inventory.dbf" ;
-  *!*	   (ivt_type, ivt_name, ivt_quan, ivt_date) ;
-  *!*	   VALUES (tmp_type, tmp_name, tmp_quan, tmp_date)
   APPEND BLANK
   REPLACE NEXT 1 ivt_type WITH tmp_type, ivt_name WITH tmp_name, ;
           ivt_quan WITH tmp_quan, ivt_date WITH tmp_date
 NEXT
 
-SET ORDER TO ivt_quan DESC
+INDEX ON ivt_quan TAG ivt_quan DESC
 
+
+* 设置输出位置
+nRow = 1
+nCol = 7
+
+offset = 1
+* 输出记录
+* 第一行为空，所以不显示记录
+SCAN 
+  @ nRow + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
+  nRow = nRow + 1
+  IF MOD(nRow, 3) = 0
+    offset = offset + 1
+  ENDIF
+ENDSCAN
 
 *!*	 CLOSE DATABASES
 *!*	 CD ..\db
@@ -76,19 +99,7 @@ SET ORDER TO ivt_quan DESC
 *!*	   ENDIF
 *!*	 ENDSCAN
 
-* 设置输出位置
-LOCAL nRow, nCol
-nRow = 2
-nCol = 7
 
-offset = 0
-* 输出记录
-SCAN 
-  @ RECN() + 2 + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-  IF MOD(RECN(), 3) = 1
-    offset = offset + 1
-    ENDIF
-ENDSCAN
+
 * 关闭数据库
-USE IN SELECT("tmpCursor")
 USE IN SELECT("Inventory")

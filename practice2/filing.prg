@@ -9,12 +9,9 @@ SET STATUS OFF
 SET SAFETY OFF
 
 
-LOCAL lcStartTime, lcEndTime 
 lcStartTime = SECONDS()
 
-cd "D:\Desktop\vfp-practices\practice2\db"
 
-CREATE TABLE  A (high_code C(3), high_name C(30))
 
 * create 200 records
 FOR i = 1 TO 200 
@@ -25,7 +22,6 @@ FOR i = 1 TO 200
     REPLACE NEXT 1 high_name WITH tmp_name
 ENDFOR
 
-CREATE TABLE  B (univ_code C(3), univ_name C(30), sch_type C(4), adm_plan N(4))
 
 *!*	 FOR i = 1 TO 20
 *!*	     APPEND BLANK
@@ -36,9 +32,7 @@ CREATE TABLE  B (univ_code C(3), univ_name C(30), sch_type C(4), adm_plan N(4))
 *!*	 ENDFOR
 
 * create table c
-CREATE TABLE  C (pass_num C(8), name C(8), id_card C(18), high_code C(3), volu1 C(3), volu2 C(3), volu3 C(3))
-INDEX ON pass_num TAG pass_num
-INDEX ON id_card TAG id_card
+
 
 *!*	 USE A IN 1
 *!*	 USE B IN 2
@@ -54,7 +48,12 @@ FOR i = 1 TO 80000
     *!*	 USE A
     *!*	 ?"RECN A = " + STR(RECN())
     m.rand1 = INT(RAND() * RECC()) + 1
-    LOCATE FOR RECN() == m.rand1
+    IF !BETWEEN(m.rand1, 1, RECC())
+        GO TOP
+    ELSE
+        GO m.rand1
+    ENDIF
+
     *!*	 * notice: judge without variable would be out of record range
     *!*	 LOCATE FOR RECN() == INT(RAND() * RECC()) + 1
     m.high_code = high_code
@@ -117,9 +116,7 @@ ENDFOR
 *!*	 CLEAR
 *!*	 LIST
 
-* Create table D
-CREATE TABLE  D (pass_num C(8), id_card C(18), chinese N(3), ;
-                math N(3), english N(3), composite N(3), all_score N(3))
+
 *!*	 * Generate scores for each student based on probability distribution
 *!*	 m.c_probs = [0.3, 1, 4, 10.7, 18, 27, 19, 10, 6, 3, 1]
 *!*	 m.m_probs = [0.5, 3, 6, 15, 19, 18, 17, 12, 5, 4, 0.5]
