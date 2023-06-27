@@ -1,6 +1,13 @@
-SET CENTURY ON 
-CLEAR 
-CLOSE DATABASES
+SET MARK TO "-"
+SET DATE TO ANSI
+SET HOUR TO 24
+SET DELE ON
+SET CENT ON
+SET TALK OFF
+SET STATUS OFF
+*!*	 SET STAT BAR OFF
+SET SAFETY OFF
+
 
 LOCAL lcStartTime, lcEndTime 
 lcStartTime = SECONDS()
@@ -20,13 +27,13 @@ ENDFOR
 
 CREATE TABLE  B (univ_code C(3), univ_name C(30), sch_type C(4), adm_plan N(4))
 
-FOR i = 1 TO 20
-    APPEND BLANK
-    REPLACE univ_code WITH STRT(STR(i, 3), ' ', '0'), ;
-            univ_name WITH "University " + STR(i, 1), ;
-            sch_type WITH "PU", ;
-            adm_plan WITH RAND()*1200+801
-ENDFOR
+*!*	 FOR i = 1 TO 20
+*!*	     APPEND BLANK
+*!*	     REPLACE univ_code WITH STRT(STR(i, 3), ' ', '0'), ;
+*!*	             univ_name WITH "University " + STR(i, 1), ;
+*!*	             sch_type WITH "PU", ;
+*!*	             adm_plan WITH RAND()*1200+801
+*!*	 ENDFOR
 
 * create table c
 CREATE TABLE  C (pass_num C(8), name C(8), id_card C(18), high_code C(3), volu1 C(3), volu2 C(3), volu3 C(3))
@@ -38,7 +45,10 @@ INDEX ON id_card TAG id_card
 *!*	 USE C IN 3
 
 RAND(-1)
-FOR i = 1 TO 20
+FOR i = 1 TO 80000
+*!*	 FUNCTION CreateAccount
+
+*!*	 endFunc
     * get a random high school code from table A
     SELECT A
     *!*	 USE A

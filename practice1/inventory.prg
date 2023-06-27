@@ -34,7 +34,6 @@ FOR i = 1 TO 30
   tmp_quan = RAND()*(7005.77-1.01) + 1.01
 
   * 随机生成日期
-  
   startDate = CTOD("23/05/01")
   tmp_date = startDate + INT(RAND()*61)
 
@@ -46,6 +45,21 @@ NEXT
 
 SET ORDER TO ivt_quan DESC
 
+* 设置输出位置
+LOCAL nRow, nCol
+nRow = 1
+nCol = 7
+
+offset = 1
+* 输出记录
+* 第一行空着所以无输出
+SCAN 
+  @ nRow + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
+  nRow = nRow + 1
+  IF MOD(nRow , 3) = 0
+    offset = offset + 1
+  ENDIF
+ENDSCAN
 
 *!*	 CLOSE DATABASES
 *!*	 CD ..\db
@@ -72,20 +86,4 @@ SET ORDER TO ivt_quan DESC
 *!*	   ENDIF
 *!*	 ENDSCAN
 
-* 设置输出位置
-LOCAL nRow, nCol
-nRow = 1
-nCol = 7
 
-offset = 1
-* 输出记录
-SCAN 
-  @ nRow + offset, nCol SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-  nRow = nRow + 1
-  IF MOD(nRow + 1, 3) = 1
-    offset = offset + 1
-  ENDIF
-ENDSCAN
-
-* 关闭数据库
-USE IN SELECT("Inventory")
