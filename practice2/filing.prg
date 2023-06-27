@@ -7,11 +7,24 @@ SET TALK OFF
 SET STATUS OFF
 *!*	 SET STAT BAR OFF
 SET SAFETY OFF
+SET EXCL OFF
+
+CLEA
+CLOSE DATABASES
+CLEAR ALL && clear variables
+
+m.path = "D:\Desktop\vfp-practices\practice2\"
+USE m.path + "A" exclusive IN 1 ALIAS highSchool
+USE m.path + "B" exclusive IN 2 ALIAS university
+USE m.path + "C" exclusive IN 3 ALIAS students
+
+* clear all data from the current exclusive table
+zap
+
+RAND(-1)
 
 
 lcStartTime = SECONDS()
-
-
 
 * create 200 records
 FOR i = 1 TO 200 
@@ -22,67 +35,35 @@ FOR i = 1 TO 200
     REPLACE NEXT 1 high_name WITH tmp_name
 ENDFOR
 
-
-*!*	 FOR i = 1 TO 20
-*!*	     APPEND BLANK
-*!*	     REPLACE univ_code WITH STRT(STR(i, 3), ' ', '0'), ;
-*!*	             univ_name WITH "University " + STR(i, 1), ;
-*!*	             sch_type WITH "PU", ;
-*!*	             adm_plan WITH RAND()*1200+801
-*!*	 ENDFOR
-
-* create table c
-
-
-*!*	 USE A IN 1
-*!*	 USE B IN 2
-*!*	 USE C IN 3
-
+* insert 8w records into C
 RAND(-1)
 FOR i = 1 TO 80000
-*!*	 FUNCTION CreateAccount
-
-*!*	 endFunc
     * get a random high school code from table A
     SELECT A
-    *!*	 USE A
-    *!*	 ?"RECN A = " + STR(RECN())
-    m.rand1 = INT(RAND() * RECC()) + 1
-    IF !BETWEEN(m.rand1, 1, RECC())
-        GO TOP
-    ELSE
-        GO m.rand1
-    ENDIF
 
-    *!*	 * notice: judge without variable would be out of record range
-    *!*	 LOCATE FOR RECN() == INT(RAND() * RECC()) + 1
+    m.rand = INT(RAND() * RECC()) + 1
+    GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
     m.high_code = high_code
-    * get 3 random university codes from table B
+    
     SELECT B
-    *!*	 USE B
-    *!*	 ?"RECN B 1= " + STR(RECN())
-    *!*	 STORE INT(RAND() * RECC()) + 1 TO m.rand_rec1
-    *!*	 GO TOP
-    *!*	 ?RECC()
-    m.rand2 = INT(RAND() * RECC()) + 1
-    *!*	 LOCATE FOR RECN() = INT(RAND() * RECC()) + 1
-    LOCATE FOR RECN() = m.rand2
-    *!*	 ? m.rand_rec
-    *!*	 STORE INT(RAND() * RECC()) + 1 TO m.rand_rec2 
+
+    * get 3 random university codes from table B
+    m.rand = INT(RAND() * RECC()) + 1
+    GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
     m.volu1 = univ_code
-    *!*	 ?"RECN B 2= " + STR(RECN())
-    *!*	 LOCATE FOR RECN() = MOD(INT(RAND() * RECC()) + 1, RECC()) + 1
-    m.rand3 = MOD(INT(RAND() * RECC()) + 1, RECC()) + 1
+    
+    m.rand = MOD(INT(RAND() * RECC()) + 1, RECC()) + 1
+    GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
     m.volu2 = univ_code
-    *!*	 STORE INT(RAND() * RECC()) + 1 TO m.rand_rec3
-    *!*	 ?"RECN B 3= " + STR(RECN())
-    *!*	 LOCATE FOR RECN() = MOD(INT(RAND() * RECC()) + 1, RECC()) + 2
-    m.rand3 = MOD(INT(RAND() * RECC()) + 1, RECC()) + 2
+
+    m.rand = MOD(INT(RAND() * RECC()) + 1, RECC()) + 2
+    GO IIF(!BETWEEN(m.rand, 1, RECC()), "TOP", m.rand)
     m.volu3 = univ_code
 
-    *!*	 ?
-
 	SELECT C
+    INDEX ON pass_num TAG pass_num
+    INDEX ON id_card TAG id_card
+
     m.pass_num = ""
     m.id_card = ""
     DO WHILE .T.
@@ -123,9 +104,7 @@ ENDFOR
 *!*	 m.e_probs = [0.5, 1, 5, 19, 20, 25, 15, 7.5, 4, 2.5, 0.5]
 *!*	 m.g_probs = [3, 6, 12, 15, 13, 15, 11, 8, 6, 4, 3, 2, 1, 0.5, 0.3, 0.1, 0.1]
 
-RAND(-1)
-
-
+* create filing information for each student
 SELECT C
 
 SCAN
@@ -152,7 +131,7 @@ ENDSCAN
 SELECT D
 
 lcEndTime = SECONDS()
-CLEAR
+
 @ 3, 10 SAY TRANSFORM(lcEndTime - lcStartTime, "@R 999999.999") + " seconds"
 
 FUNCTION getChinese(prob)
