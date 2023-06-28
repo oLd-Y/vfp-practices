@@ -18,7 +18,6 @@ USE m.path + "Inventory" exclusive
 
 zap
 
-
 m.t_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 startDate = CTOD("23/05/01")
 * 往库中加30条记录

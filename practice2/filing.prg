@@ -14,77 +14,98 @@ CLOSE DATABASES
 CLEAR ALL && clear variables
 
 m.path = "D:\Desktop\vfp-practices\practice2\"
+* use 4 tables
 USE m.path + "A" exclusive IN 1 ALIAS highSchool
+*!*	 ZAP
 USE m.path + "B" exclusive IN 2 ALIAS university
 USE m.path + "C" exclusive IN 3 ALIAS students
+*!*	 ZAP
 USE m.path + "D" exclusive IN 4 ALIAS volunteer
+*!*	 ZAP
 
-* clear all data from the current exclusive table
-zap
+* clear all data from the current exclusive tables
+ZAP IN highSchool
+ZAP IN students
+ZAP IN volunteer
 
 RAND(-1)
 
 
 lcStartTime = SECONDS()
-
-* add 200 records to B
-FOR i = 1 TO 200 
-    m.t_code = PADL(i, 3, "0") 
+SELECT highSchool
+* add 200 records to A
+FOR i = 1 TO 200
+    m.t_code = PADL(i, 3, "0")
     m.t_name = "Shanghai " + m.t_code + " th High School" 
     APPEND BLANK 
-    REPLACE NEXT 1 high_code WITH m.t_code
-    REPLACE NEXT 1 high_name WITH m.t_name
+    REPLACE NEXT 1 high_code WITH m.t_code, high_name WITH m.t_name
 ENDFOR
 
-* insert 8w records into C
+
+* insert 8w records into students
 RAND(-1)
-FOR i = 1 TO 20
-    * get a random high school code from table A
+m.cnt2 = 0
+m.cnt3 = 0
+
+FOR i = 1 TO 80000
+    * get a random high school code from highschool
     SELECT highSchool
 
     m.rand = INT(RAND() * RECC()) + 1
-    GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
+    GO m.rand
+    *!*	 GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
     m.high_code = high_code
     
+    * get 3 random university codes from table B
+    * if a student has multiple volunteer, then the university code should be different
     SELECT university
 
+    *!*	 STORE "" TO m.volu1, m.volu2, m.volu3
+    m.volu1 = ""
+    m.volu2 = ""
+    m.volu3 = ""
 
-    STORE "" TO m.volu1, m.volu2, m.volu3
-
-    * get 3 random university codes from table B
     m.vol_num = INT(RAND() * 3) + 1
-    FOR i = 1 TO m.vol_num
-        m.rand = INT(RAND() * RECC()) + 1
-        GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
-        IF i == 1
-            m.volu1 = univ_code
+    FOR j = 1 TO m.vol_num
+        IF j == 1
+            m.rand = INT(RAND() * RECC()) + 1
+            GO m.rand
+            *!*	 ?"RECN() = " + STR(RECN())
+            *!*	 GO IIF(BETWEEN(m.rand, 1, RECC()), m.rand, 1)
+            m.volu1 = university.univ_code
         ENDIF
-        DO WHILE i == 2 .AND. m.volu1 == m.volu2
+
+        DO WHILE j == 2
+            m.rand = INT(RAND() * RECC()) + 1
+            GO m.rand
             m.volu2 = univ_code
+            IF m.volu1 == m.volu2
+                LOOP
+            ENDIF
+            EXIT
         ENDDO
-        DO WHILE i == 3 .AND. (m.volu1 == m.volu2 .OR. m.volu2 == m.volu3 .OR. m.volu1 == m.volu3)
-            m.volu2 = univ_code
+
+        DO WHILE j == 3
+            m.rand = INT(RAND() * RECC()) + 1
+            GO m.rand
+            m.volu3 = univ_code
+            IF m.volu1 == m.volu2 .OR. m.volu2 == m.volu3 .OR. m.volu1 == m.volu3
+                LOOP
+            ENDIF
+            EXIT
         ENDDO
     ENDFOR
 
-    *!*	 m.rand = MOD(INT(RAND() * RECC()) + 1, RECC()) + 1
-    *!*	 GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
-    *!*	 m.volu2 = univ_code
-
-    *!*	 m.rand = MOD(INT(RAND() * RECC()) + 1, RECC()) + 2
-    *!*	 GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
-    *!*	 m.volu3 = univ_code
-
 	SELECT students
-
+    * generate a random pass number and id card number
     m.pass_num = ""
     m.id_card = ""
     chars = "0123456789"
     DO WHILE .T.
-        FOR j = 1 TO 8
+        FOR x = 1 TO 8
             m.pass_num = m.pass_num + SUBSTR(chars, INT(RAND()*10)+1, 1)
         ENDFOR
-        FOR k = 1 TO 18
+        FOR y = 1 TO 18
             m.id_card = m.id_card + SUBSTR(chars, INT(RAND()*10)+1, 1)
         ENDFOR
 
@@ -97,12 +118,12 @@ FOR i = 1 TO 20
 
     APPEND BLANK
     REPLACE pass_num WITH m.pass_num, ;
-        name WITH "Student" + LTRIM(STR(i)), ;
+        name WITH RIGHT("00000000" + LTRIM(STR(i)), 8), ;
         id_card WITH m.id_card, ;
         high_code WITH m.high_code, ;
         volu1 WITH m.volu1, ;
-        volu2 WITH m.volu1, ;
-        volu3 WITH m.volu1
+        volu2 WITH m.volu2, ;
+        volu3 WITH m.volu3
 ENDFOR
 
 *!*	 * Generate scores for each student based on probability distribution
@@ -115,8 +136,8 @@ ENDFOR
 SELECT students
 
 SCAN
-    m.pass_num = C.pass_num
-    m.id_card = C.id_card
+    m.pass_num = students.pass_num
+    m.id_card = students.id_card
 
     SELECT volunteer
     * get all scores according to the probability
@@ -135,7 +156,6 @@ SCAN
             all_score WITH m.all_score
 ENDSCAN
 
-SELECT volunteer
 
 lcEndTime = SECONDS()
 
