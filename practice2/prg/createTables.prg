@@ -2,6 +2,8 @@
 CREATE TABLE ;
 "D:\Desktop\vfp-practices\practice2\dbf\A" ;
 (high_code C(3), high_name C(30))
+INDEX ON high_code TAG high_code
+
 
 && university
 *!*	 CREATE TABLE  '
@@ -21,17 +23,20 @@ CREATE TABLE ;
 *!*	         univ_type WITH m.univ_type, ;
 *!*	         adm_plan WITH m.admin_plan
 *!*	 ENDFOR
+*!*	 index on univ_code TAG univ_code
 
 && student
 CREATE TABLE  ;
 "D:\Desktop\vfp-practices\practice2\dbf\C" ;
     (pass_num C(8), name C(8), id_card C(18), high_code C(3), ;
-        volu1 C(3), volu2 C(3), volu3 C(3))
+        volu1_code C(3), volu2_code C(3), volu3_code C(3))
 INDEX ON pass_num TAG pass_num
-INDEX ON id_card TAG id_card
+
+
 
 && score
 * Create table D
 CREATE TABLE  "D:\Desktop\vfp-practices\practice2\dbf\D" ;
     (pass_num C(8), id_card C(18), chinese N(3), ;
                 math N(3), english N(3), composite N(3), all_score N(3))
+index on pass_num TAG pass_num

@@ -15,24 +15,24 @@ CLEAR ALL && clear variables
 
 m.path = "D:\Desktop\vfp-practices\practice2\dbf\"
 * use 4 tables
-USE m.path + "A" exclusive IN 1 ALIAS highSchool
+USE m.path + "A" exclusive IN 1 ALIAS highSchools
 *!*	 ZAP
-USE m.path + "B" exclusive IN 2 ALIAS university
-USE m.path + "C" exclusive IN 3 ALIAS students
+USE m.path + "B" exclusive IN 2 ALIAS universities
+USE m.path + "C" exclusive IN 3 ALIAS student
 *!*	 ZAP
-USE m.path + "D" exclusive IN 4 ALIAS score
+USE m.path + "D" exclusive IN 4 ALIAS scores
 *!*	 ZAP
 
 * clear all data from the current exclusive tables
-ZAP IN highSchool
+ZAP IN highSchools
 ZAP IN students
-ZAP IN score
+ZAP IN scores
 
 RAND(-1)
 
 
 lcStartTime = SECONDS()
-SELECT highSchool
+SELECT highSchools
 * add 200 records to A
 FOR i = 1 TO 200
     m.t_code = PADL(i, 3, "0")
@@ -48,8 +48,8 @@ m.cnt2 = 0
 m.cnt3 = 0
 
 FOR i = 1 TO 80000
-    * get a random high school code from highschool
-    SELECT highSchool
+    * get a random high school code from highSchools
+    SELECT highSchools
 
     m.rand = INT(RAND() * RECC()) + 1
     GO m.rand
@@ -58,12 +58,12 @@ FOR i = 1 TO 80000
     
     * get 3 random university codes from table B
     * if a student has multiple volunteer, then the university code should be different
-    SELECT university
+    SELECT universities
 
-    *!*	 STORE "" TO m.volu1, m.volu2, m.volu3
-    m.volu1 = ""
-    m.volu2 = ""
-    m.volu3 = ""
+    *!*	 STORE "" TO m.volu1_code, m.volu2_code, m.volu3_code
+    m.volu1_code = ""
+    m.volu2_code = ""
+    m.volu3_code = ""
 
     m.vol_num = INT(RAND() * 3) + 1
     FOR j = 1 TO m.vol_num
@@ -72,14 +72,14 @@ FOR i = 1 TO 80000
             GO m.rand
             *!*	 ?"RECN() = " + STR(RECN())
             *!*	 GO IIF(BETWEEN(m.rand, 1, RECC()), m.rand, 1)
-            m.volu1 = university.univ_code
+            m.volu1_code = universities.univ_code
         ENDIF
 
         DO WHILE j == 2
             m.rand = INT(RAND() * RECC()) + 1
             GO m.rand
-            m.volu2 = univ_code
-            IF m.volu1 == m.volu2
+            m.volu2_code = univ_code
+            IF m.volu1_code == m.volu2_code
                 LOOP
             ENDIF
             EXIT
@@ -88,8 +88,8 @@ FOR i = 1 TO 80000
         DO WHILE j == 3
             m.rand = INT(RAND() * RECC()) + 1
             GO m.rand
-            m.volu3 = univ_code
-            IF m.volu1 == m.volu2 .OR. m.volu2 == m.volu3 .OR. m.volu1 == m.volu3
+            m.volu3_code = univ_code
+            IF m.volu1_code == m.volu2_code .OR. m.volu2_code == m.volu3_code .OR. m.volu1_code == m.volu3_code
                 LOOP
             ENDIF
             EXIT
@@ -109,7 +109,7 @@ FOR i = 1 TO 80000
             m.id_card = m.id_card + SUBSTR(chars, INT(RAND()*10)+1, 1)
         ENDFOR
 
-        IF SEEK(m.pass_num, "students", "pass_num") .OR. SEEK(m.id_card, "students", "id_card")
+        IF SEEK(m.pass_num, "students", "pass_num") .OR. SEEK(m.pass_num, "students", "pass_num")
             LOOP
         ENDIF
         SET ORDER TO
@@ -121,9 +121,9 @@ FOR i = 1 TO 80000
         name WITH RIGHT("00000000" + LTRIM(STR(i)), 8), ;
         id_card WITH m.id_card, ;
         high_code WITH m.high_code, ;
-        volu1 WITH m.volu1, ;
-        volu2 WITH m.volu2, ;
-        volu3 WITH m.volu3
+        volu1_code WITH m.volu1_code, ;
+        volu2_code WITH m.volu2_code, ;
+        volu3_code WITH m.volu3_code
 ENDFOR
 
 *!*	 * Generate scores for each student based on probability distribution
@@ -139,7 +139,7 @@ SCAN
     m.pass_num = students.pass_num
     m.id_card = students.id_card
 
-    SELECT score
+    SELECT scores
     * get all scores according to the probability
     m.chinese_score = getChinese(ROUND(RAND() * 100, 1))
     m.math_score = getMath(ROUND(RAND() * 100, 1))
