@@ -9,6 +9,7 @@ SET STATUS OFF
 SET SAFETY OFF
 SET EXCL OFF
 
+public m.path
 m.path = "D:\Desktop\vfp-practices\practice2\dbf\"
 * use 4 tables
 USE m.path + "A" exclusive IN 1 ALIAS highschools order high_code
@@ -17,7 +18,7 @@ USE m.path + "B" exclusive IN 2 ALIAS universities order univ_code
 
 USE m.path + "C" exclusive IN 3 ALIAS students order pass_num
 
-USE m.path + "D" exclusive IN 4 ALIAS scores order pass_num
+USE m.path + "D" exclusive IN 4 ALIAS scores order sort_score
 
 
 
@@ -51,10 +52,7 @@ sele t_score
 inde on rank tag rank
 
 select scores
-set order to sort_score
 SCAN
-    *!*	 set order to pass_num
-    
     select students
     set order to pass_num
     seek scores.pass_num
@@ -65,7 +63,7 @@ SCAN
     select universities
     seek students.volu1_code
     m.volu1_name = univ_name
-    seek students.volu2_code
+
     m.volu2_name = univ_name
     seek students.volu3_code
     m.volu3_name = univ_name

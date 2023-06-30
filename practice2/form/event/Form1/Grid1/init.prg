@@ -1,11 +1,11 @@
 with this
-    .recordSource = "t_score"
+    
 	for i = 1 to 13
-		.Columns(i).movable = .F.
-		.Columns(i).Header1.alignment = 2
-		.Columns(i).Header1.fontBold = .T.
-		.Columns(i).Header1.fontSize = 10
-		.Columns(i).Header1.fontName = "宋体"
+		.Columns(i).Movable = .F.
+		.Columns(i).Header1.Alignment = 2
+		.Columns(i).Header1.FontBold = .T.
+		.Columns(i).Header1.FontSize = 10
+		.Columns(i).Header1.FontName = "宋体"
 		if i < 4
 			.Columns(i).BackColor = RGB(255, 255, 0)
 		endi

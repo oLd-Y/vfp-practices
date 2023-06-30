@@ -72,4 +72,3 @@ E. 不能使用 SQL 语句，包括 INSERT
   G. FORM中加一个COMMAND按钮，弹出一个子FORM，叠加在顶层FORM上。子FORM显示成绩分布表，该分布表用GRID显示，列内容为总分、人数、累计人数，子FORM中加一个按钮，功能是将该表导出为EXCEL
   H. FORM中各对象的排列、大小、位置、颜色要合理、美观
   I. 所有GRID均为READONLY，不显示记录标记和删除标记。当前行为高亮且保持
-  
