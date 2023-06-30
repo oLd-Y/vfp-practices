@@ -16,11 +16,15 @@ CLEAR ALL && clear variables
 m.path = "D:\Desktop\vfp-practices\practice2\dbf\"
 * use 4 tables
 USE m.path + "A" exclusive IN 1 ALIAS highSchools
+
 *!*	 ZAP
 USE m.path + "B" exclusive IN 2 ALIAS universities
-USE m.path + "C" exclusive IN 3 ALIAS student
+
+USE m.path + "C" exclusive IN 3 ALIAS students
 *!*	 ZAP
+
 USE m.path + "D" exclusive IN 4 ALIAS scores
+
 *!*	 ZAP
 
 * clear all data from the current exclusive tables
@@ -118,7 +122,7 @@ FOR i = 1 TO 80000
 
     APPEND BLANK
     REPLACE pass_num WITH m.pass_num, ;
-        name WITH RIGHT("00000000" + LTRIM(STR(i)), 8), ;
+        stu_name WITH "stu" + RIGHT("00000000" + LTRIM(STR(i)), 8), ;
         id_card WITH m.id_card, ;
         high_code WITH m.high_code, ;
         volu1_code WITH m.volu1_code, ;
