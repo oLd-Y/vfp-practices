@@ -13,17 +13,17 @@ CLEA
 CLOSE DATABASES
 CLEAR ALL && clear variables
 
-m.path = "D:\Desktop\vfp-practices\practice2\dbf\"
+m.pub_path = "D:\Desktop\vfp-practices\practice2\dbf\"
 * use 4 tables
-USE m.path + "A" exclusive IN 1 ALIAS highSchools
+USE m.pub_path + "A" exclusive IN 1 ALIAS highSchools
 
 *!*	 ZAP
-USE m.path + "B" exclusive IN 2 ALIAS universities
+USE m.pub_path + "B" exclusive IN 2 ALIAS universities
 
-USE m.path + "C" exclusive IN 3 ALIAS students
+USE m.pub_path + "C" exclusive IN 3 ALIAS students
 *!*	 ZAP
 
-USE m.path + "D" exclusive IN 4 ALIAS scores
+USE m.pub_path + "D" exclusive IN 4 ALIAS scores
 
 *!*	 ZAP
 
