@@ -13,8 +13,8 @@ CLEA
 CLOSE DATABASES
 CLEAR ALL && clear variables
 
-m.path = "D:\Desktop\vfp-practices\practice1\"
-USE m.path + "Inventory" exclusive
+m.pub_path = "D:\Desktop\vfp-practices\practice1\"
+USE m.pub_path + "Inventory" exclusive
 
 zap
 
