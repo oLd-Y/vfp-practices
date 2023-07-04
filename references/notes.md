@@ -1,4 +1,4 @@
-# Common attributes
+# Common Grid's attributes
 
 1. ActiveCell
 2. AfterRowColChange Event
@@ -36,3 +36,27 @@
 34. SplitBar
 35. Width
 36. setFocus
+
+# multiple methods of loop
+
+DO WHILE !EOF()
+
+	SKIP
+ENDDO
+
+
+SCAN REST WHILE ivt_quan >=3000
+
+ENDSCAN
+
+LOCATE FOR ivt_quan <= 4000
+DO WHILE !EOF()
+
+	CONTINUE
+ENDDO
+
+CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
+INDEX ON ivt_quan TAG ivt_quan
+SET ORDER TO ivt_quan DESCENDING
+
+APPEND FROM Inventory.dbf FOR ivt_quan  <= 4000
