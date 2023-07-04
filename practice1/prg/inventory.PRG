@@ -63,7 +63,7 @@ nROw = 2
 m.cnt = 0
 SCAN FOR ivt_quan <= 4000
   * @ nRow + offset, 7 SAY ivt_name + " " + TRANS(ivt_quan, "@ 9999.99")
-    @ nRow, 16 SAY ivt_quan picture "9999.99"
+        @ nRow, 16 SAY ivt_quan picture "9999.99"
     nRow = nRow + 1
     m.cnt = m.cnt + 1
 
