@@ -1,9 +1,9 @@
-*!*	 LOCAL form2
-*!*	 form2 = CREATEOBJECT("Form")
-*!*	 form2.Caption = "Form2"
-*!*	 form2.Visible = .T.
-*!*	 form2.Top = THIS.Top   && 设置Form2在顶层Form1的位置
-*!*	 form2.Left = THIS.Left + THIS.Width   && 设置Form2在顶层Form1的位置
+*!* LOCAL form2
+*!* form2 = CREATEOBJECT("Form")
+*!* form2.Caption = "Form2"
+*!* form2.Visible = .T.
+*!* form2.Top = THIS.Top   && 设置Form2在顶层Form1的位置
+*!* form2.Left = THIS.Left + THIS.Width   && 设置Form2在顶层Form1的位置
 
 *!*	 GRID2 = CREATEOBJECT("Grid")
 *!*	 GRID2.Name = "Grid2"
@@ -44,7 +44,6 @@
 *!*	         .Columns(1).Header1.Caption = "总分"
 *!*	         .Columns(2).Header1.Caption = "人数"
 *!*	         .Columns(3).Header1.Caption = "累计人数"
-*!*	         * 可根据需要设置其他Grid2的属性
 *!*	     ENDWITH
 *!*	 ENDWITH
 
