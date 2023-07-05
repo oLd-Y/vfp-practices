@@ -52,7 +52,7 @@ ENDSCAN
 LOCATE FOR ivt_quan <= 4000
 DO WHILE !EOF()
 
-	CONTINUE
+    CONTINUE
 ENDDO
 
 CREATE CURSOR tmpCursor (ivt_name C(50), ivt_quan N(10,2))
@@ -60,3 +60,20 @@ INDEX ON ivt_quan TAG ivt_quan
 SET ORDER TO ivt_quan DESCENDING
 
 APPEND FROM Inventory.dbf FOR ivt_quan  <= 4000
+
+# some useful grammer
+
+1. 交替显示白色和绿色记录
+    ```visual foxpro
+    frmInventory.grdGrid1.SetAll("DynamicBackColor", ;
+    "IIF(MOD(RECNO( ), 2)=0, RGB(255,255,255) ;
+    , RGB(0,255,0))", "Column")  
+    ```
+
+2. 启动事务
+    ```visual foxpro
+    frmInventory.SHOW  && 显示该表单
+    READ EVENTS  && 启动事件处理
+    ```
+
+3. 
