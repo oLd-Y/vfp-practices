@@ -16,13 +16,15 @@ CLEAR ALL && clear variables ..
 m.pub_path = "D:\Desktop\vfp-practices\dbf\"
 USE m.pub_path + "inventory" exclusive in 1
 
+set classlib to ivt_clslib additive
 *!* create an inventory form
 frmInventory = CREATEOBJECT('Form')
+
 
 *!* add a grid to the form
 frmInventory.AddObject('gridInventory','Grid')
 *!* add a command button to the form
-frmInventory.AddObject('cmdSave','CommandButton')
+frmInventory.AddObject('cmdSave','CmdSave')
 *!* add a text box to the form
 frmInventory.AddObject('txtProductName','TextBox')
 
@@ -92,25 +94,25 @@ MESSAGEBOX("Form已成功保存到：" + lcFilePath, 64, "保存成功")
 
 *!* do form inventory.scx
 
-DEFINE CLASS cmdSave AS CommandButton
-    caption = 'Save'
-    left = 10
-    top = 10
-    height = 25
-    width = 50
-    visible = .T.
-    procedure Click
-        txt = LTRIM(Inventory.ivt_name)
-
-        if EMPTY(ALLTRIM(thisForm.txtProductName.value))
-            messagebox("请重新输入品名！", 16, "提示")
-            thisForm.txtProductName.setFocus()
-        else
-            replace next 1 Inventory.ivt_name with LTRIM(Inventory.ivt_name)
-            thisForm.gridInventory.refresh
-            thisForm.gridInventory.setFocus()
-        endif
-ENDDEFINE
+*!* DEFINE CLASS cmdSave AS CommandButton
+*!*     caption = 'Save'
+*!*     left = 10
+*!*     top = 10
+*!*     height = 25
+*!*     width = 50
+*!*     visible = .T.
+*!*     procedure Parent.Click
+*!*         txt = LTRIM(Inventory.ivt_name)
+*!*
+*!*         if EMPTY(ALLTRIM(thisForm.txtProductName.value))
+*!*             messagebox("请重新输入品名！", 16, "提示")
+*!*             thisForm.txtProductName.setFocus()
+*!*         else
+*!*             replace next 1 Inventory.ivt_name with LTRIM(Inventory.ivt_name)
+*!*             thisForm.gridInventory.refresh
+*!*             thisForm.gridInventory.setFocus()
+*!*         endif
+*!* ENDDEFINE
 
 
 
