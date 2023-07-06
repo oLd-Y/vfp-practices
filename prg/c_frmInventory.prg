@@ -13,7 +13,7 @@ CLEA
 CLOSE DATABASES
 CLEAR ALL && clear variables ..
 
-m.pub_path = "D:\Desktop\vfp-practices\dbf\"
+m.pub_path = "D:\Desktop\vfp-practices\inventory\dbf\"
 USE m.pub_path + "inventory" exclusive in 1
 
 set classlib to ivt_clslib additive
@@ -24,7 +24,7 @@ frmInventory = CREATEOBJECT('Form')
 *!* add a grid to the form
 frmInventory.AddObject('gridInventory','Grid')
 *!* add a command button to the form
-frmInventory.AddObject('cmdSave','CmdSave')
+frmInventory.AddObject('cmdSave','cmdSave')
 *!* add a text box to the form
 frmInventory.AddObject('txtProductName','TextBox')
 
@@ -91,30 +91,30 @@ RELEASE frmInventory
 MESSAGEBOX("Form已成功保存到：" + lcFilePath, 64, "保存成功")
 *!* modify form inventory
 
-
 *!* do form inventory.scx
 
-*!* DEFINE CLASS cmdSave AS CommandButton
-*!*     caption = 'Save'
-*!*     left = 10
-*!*     top = 10
-*!*     height = 25
-*!*     width = 50
-*!*     visible = .T.
-*!*     procedure Parent.Click
-*!*         txt = LTRIM(Inventory.ivt_name)
-*!*
-*!*         if EMPTY(ALLTRIM(thisForm.txtProductName.value))
-*!*             messagebox("请重新输入品名！", 16, "提示")
-*!*             thisForm.txtProductName.setFocus()
-*!*         else
-*!*             replace next 1 Inventory.ivt_name with LTRIM(Inventory.ivt_name)
-*!*             thisForm.gridInventory.refresh
-*!*             thisForm.gridInventory.setFocus()
-*!*         endif
-*!* ENDDEFINE
+DEFINE CLASS CmdSave AS CommandButton
+    caption = 'Save'
+    left = 10
+    top = 10
+    height = 25
+    width = 50
+    visible = .T.
+    procedure Click
+        txt = LTRIM(Inventory.ivt_name)
 
+        if EMPTY(ALLTRIM(thisForm.txtProductName.value))
+            messagebox("请重新输入品名！", 16, "提示")
+            thisForm.txtProductName.setFocus()
+        else
+            replace next 1 Inventory.ivt_name with LTRIM(Inventory.ivt_name)
+            thisForm.gridInventory.refresh
+            thisForm.gridInventory.setFocus()
+        endif
+ENDDEFINE
 
+add class CmdSave to ivt_clslib
+set classlib to ivt_clslib additive
 
 *!* DEFINE CLASS Form AS Form
 *!*     PROCEDURE Load

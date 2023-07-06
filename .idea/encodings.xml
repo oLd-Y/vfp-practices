@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/cpn/a_inventory.PRG" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/event/grades/fGrades/Init.prg" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/event/grades/fGrades/Load.prg" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/event/grades/fGrades/cbSave/Click.prg" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/event/score_distr/fScoreDistr/Init.prg" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/event/score_distr/fScoreDistr/Load.prg" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/event/score_distr/fScoreDistr/cbExport/Click.prg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/event/grade/Command1/Click.prg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/event/grade/Form1/Init.prg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/event/grade/Form1/Load.prg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/event/score_distr/Command1/Click.prg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/event/score_distr/Form1/Init.prg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/event/score_distr/Form1/Load.prg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/inventory/cpn/a_inventory.PRG" charset="GBK" />
     <file url="PROJECT" charset="GBK" />
   </component>
 </project>

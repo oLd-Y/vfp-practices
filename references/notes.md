@@ -75,5 +75,92 @@ APPEND FROM Inventory.dbf FOR ivt_quan  <= 4000
     frmInventory.SHOW  && 显示该表单
     READ EVENTS  && 启动事件处理
     ```
+# 恒等运算符
+“张三丰” = “张三” && .T.
+“张三” = “张三丰” && .F. 
 
-3. 
+“张三丰” == “张三” && .F.
+“张三” == “张三丰” && .F.
+
+# calculate scale
+```visual forpro
+select t_distr
+go top
+SCAN
+SELECT t_score
+count for t_score.all_score <= t_distr.all_score .AND. t_score.all_score > (t_distr.all_score - 10) to m.stu_count
+m.scale = str((m.stu_count / recc()) * 100, 10, 5) + "%"
+
+    select t_distr
+    replace ;
+        scale with m.scale, ;
+        stu_count with m.stu_count
+ENDSCAN
+
+```
+
+# 使用scan创建各表。（grade表单）
+```visual foxpro
+&& The ranking is based on the all_score from the highest to the lowest,
+&& and the same all_score will be ranked according to the value of
+&& mathematics, english and composite score from the highest to the lowest.
+create table m.pub_path + "t_score" ( ;
+    pass_num C(8), ;
+    id_card C(18), ;
+    stu_name C(8), ;
+    high_name C(30), ;
+    all_score N(3), ;
+    chinese N(3), ;
+    math N(3), ;
+    english N(3), ;
+    composite N(3), ;
+    rank N(6), ;
+    volu_name1 C(30), ;
+    volu_name2 C(30), ;
+    volu_name3 C(30) ;
+)
+
+use in t_score
+use m.pub_path + "t_score" excl in 5
+
+select t_score
+index on rank tag rank
+
+select score
+go top
+SCAN
+    select student
+    set order to pass_num
+    seek score.pass_num
+
+    select highschool
+    seek student.high_code
+
+    select university
+    seek student.volu_code1
+    m.volu_name1 = univ_name
+
+    m.volu_name2 = univ_name
+    seek student.volu_code3
+    m.volu_name3 = univ_name
+
+    select t_score
+    APPEND BLANK
+    REPLACE rank WITH recn(), ;
+            pass_num WITH student.pass_num, ;
+            id_card WITH student.id_card, ;
+            stu_name WITH student.stu_name, ;
+            high_name WITH highschool.high_name, ;
+            all_score WITH score.all_score, ;
+            chinese WITH score.chinese, ;
+            math WITH score.math, ;
+            english WITH score.english, ;
+            composite WITH score.composite, ;
+            volu_name1 WITH m.volu_name1, ;
+            volu_name2 WITH m.volu_name2, ;
+            volu_name3 WITH m.volu_name3
+ENDSCAN
+
+select t_score
+go top
+```

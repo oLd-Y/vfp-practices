@@ -1,0 +1,1 @@
+do form "D:\Desktop\vfp-practices\grade\cpn\score_distr.SCX"
