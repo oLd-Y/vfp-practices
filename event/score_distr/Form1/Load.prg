@@ -13,36 +13,7 @@ SET EXCL OFF
 CLEA
 CLOSE ALL
 CLOSE DATABASES
-CLEAR ALL && clear variables ..
 
-public m.pub_path
 m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
-
-create table m.pub_path + "t_distr" ;
-(scr_range C(10), scale C(30), stu_count N(6), all_score N(3))
-use in t_distr
-use m.pub_path + "t_distr" excl in 6
-
-select 6
-FOR i = 599 TO 200 step -10
-    m.scr_range = str(i - 10, 3) + " ~ " + str(i, 3)
-    append blank
-    REPLACE all_score WITH i, ;
-        scr_range WITH m.scr_range
-ENDFOR
-
-go top
-
-SCAN
-    SELECT score
-    count for score.all_score <= t_distr.all_score .AND. score.all_score > (t_distr.all_score - 10) to m.stu_count
-    m.scale = str((m.stu_count / recc()) * 100, 10, 5) + "%"
-
-    select t_distr
-    replace ;
-        scale with m.scale, ;
-        stu_count with m.stu_count
-ENDSCAN
-
-
-go top
+USE m.pub_path + "tb_score_distr" alias score_distr exclusive IN 600
+select score_distr

@@ -15,17 +15,17 @@ clea events
 public m.pub_path
 m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
 * use 4 tables
-USE m.pub_path + "highschool" alias highschool exclusive IN 100 order high_code
+USE m.pub_path + "highschool" alias highschool exclusive IN 1 order high_code
 
-USE m.pub_path + "university" alias university1 exclusive IN 200 order univ_code
-USE m.pub_path + "university" alias university2 exclusive IN 201 order univ_code again
-USE m.pub_path + "university" alias university3 exclusive IN 202 order univ_code again
+USE m.pub_path + "university" alias university1 exclusive IN 2 order univ_code
+USE m.pub_path + "university" alias university2 exclusive IN 3 order univ_code again
+USE m.pub_path + "university" alias university3 exclusive IN 4 order univ_code again
 
-USE m.pub_path + "student" alias student exclusive IN 300 order pass_num
+USE m.pub_path + "student" alias student exclusive IN 5 order pass_num
 
-USE m.pub_path + "score" alias score exclusive IN 400 order sort_score
+USE m.pub_path + "score" alias score exclusive IN 6 order sort_score
 
-use m.pub_path + "rank" alias rank in 500 excl order pass_num
+use m.pub_path + "rank" alias rank in 7 excl order pass_num
 
 select score
 set relation to pass_num into student, ;

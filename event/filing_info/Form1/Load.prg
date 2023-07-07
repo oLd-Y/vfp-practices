@@ -14,12 +14,13 @@ clea events
 
 public m.pub_path
 m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
-* use 4 tables
+&&  use 4 tables
 USE m.pub_path + "highschool" alias highschool exclusive IN 100 order high_code
 
-USE m.pub_path + "university" alias university1 exclusive IN 200 order univ_code
-USE m.pub_path + "university" alias university2 exclusive IN 201 order univ_code again
-USE m.pub_path + "university" alias university3 exclusive IN 202 order univ_code again
+USE m.pub_path + "university" alias university exclusive IN 200 order univ_code
+USE m.pub_path + "university" alias university1 exclusive IN 201 order univ_code again
+USE m.pub_path + "university" alias university2 exclusive IN 202 order univ_code again
+USE m.pub_path + "university" alias university3 exclusive IN 203 order univ_code again
 
 USE m.pub_path + "student" alias student exclusive IN 300 order pass_num
 

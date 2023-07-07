@@ -18,15 +18,15 @@ RAND(-1)
 
 m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
 *!* use 4 tables
-USE m.pub_path + "highschool" alias highschool exclusive IN 1 order high_code
+USE m.pub_path + "highschool" alias highschool exclusive IN 100 order high_code
 
-USE m.pub_path + "university" alias university exclusive IN 2 order univ_code
+USE m.pub_path + "university" alias university exclusive IN 200 order univ_code
 
-USE m.pub_path + "student" alias student exclusive IN 3 order pass_num
+USE m.pub_path + "student" alias student exclusive IN 300 order pass_num
 
-USE m.pub_path + "score" alias score exclusive IN 4 order sort_score
+USE m.pub_path + "score" alias score exclusive IN 400 order sort_score
 
-use m.pub_path + "rank" alias rank in 5 excl order pass_num
+use m.pub_path + "rank" alias rank  exclusive in 500 order pass_num
 
 *!* clear all data from the current exclusive tables
 ZAP IN highSchool
@@ -156,7 +156,6 @@ SCAN
     replace pass_num with score.pass_num
     replace rank with m.i
 ENDSCAN
-
 
 lcEndTime = SECONDS()
 
