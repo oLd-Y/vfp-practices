@@ -1,6 +1,6 @@
 
 with this.Grid1
-    .recordSource = "student"
+    .recordSource = "score"
     .readOnly = .T.
     .deleteMark = .F.
     .recordMark = .F.
@@ -21,25 +21,7 @@ with this.Grid1
         if i < 4
             .Columns(i).backColor = RGB(255, 255, 0)
         endi
-
-&&         .Columns(i).controlSource = field(i)
     endfor
-
-    && create table m.pub_path + "t_score" ( ;
-    &&     pass_num C(8), ;
-    &&     id_card C(18), ;
-    &&     stu_name C(8), ;
-    &&     high_name C(30), ;
-    &&     all_score N(3), ;
-    &&     chinese N(3), ;
-    &&     math N(3), ;
-    &&     english N(3), ;
-    &&     composite N(3), ;
-    &&     rank N(6), ;
-    &&     volu_name1 C(30), ;
-    &&     volu_name2 C(30), ;
-    &&     volu_name3 C(30) ;
-    && )
 
     .columns(1).controlSource = "student.pass_num"
     .columns(2).controlSource = "student.id_card"
@@ -50,7 +32,7 @@ with this.Grid1
     .columns(7).controlSource = "score.math"
     .columns(8).controlSource = "score.english"
     .columns(9).controlSource = "score.composite"
-    .columns(10).controlSource = recn("score")
+    .columns(10).controlSource = "rank.rank"
     .columns(11).controlSource = "university1.univ_name"
     .columns(12).controlSource = "university2.univ_name"
     .columns(13).controlSource = "university3.univ_name"

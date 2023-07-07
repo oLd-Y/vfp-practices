@@ -73,6 +73,13 @@ index on pass_num TAG pass_num
 index on str(all_score, 3) + str(math, 3) + str(english, 3) + str(composite, 3) TAG sort_score desc
 use in score
 
+create table m.pub_path + "rank" ( ;
+    pass_num C(10), ;
+    rank N(6) ;
+)
+index on pass_num tag pass_num
+use in rank
+
 CLEA
 CLOSE ALL
 CLOSE DATABASES

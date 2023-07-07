@@ -18,13 +18,15 @@ RAND(-1)
 
 m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
 *!* use 4 tables
-USE m.pub_path + "highschool" exclusive IN 1
+USE m.pub_path + "highschool" alias highschool exclusive IN 1 order high_code
 
-USE m.pub_path + "university" exclusive IN 2
+USE m.pub_path + "university" alias university exclusive IN 2 order univ_code
 
-USE m.pub_path + "student" exclusive IN 3
+USE m.pub_path + "student" alias student exclusive IN 3 order pass_num
 
-USE m.pub_path + "score" exclusive IN 4
+USE m.pub_path + "score" alias score exclusive IN 4 order sort_score
+
+use m.pub_path + "rank" alias rank in 5 excl order pass_num
 
 *!* clear all data from the current exclusive tables
 ZAP IN highSchool
@@ -123,8 +125,6 @@ ENDFOR
 
 && create filing information for each student
 SELECT student
-&& »Ö¸´Õý³£ÅÅÐò
-SET ORDER TO
 
 SCAN
     m.pass_num = student.pass_num
@@ -146,6 +146,17 @@ SCAN
             composite WITH m.composite_score, ;
             all_score WITH m.all_score
 ENDSCAN
+
+select score
+m.i = 0
+SCAN
+    m.i = m.i + 1
+    select rank
+    append blank
+    replace pass_num with score.pass_num
+    replace rank with m.i
+ENDSCAN
+
 
 lcEndTime = SECONDS()
 
@@ -271,10 +282,11 @@ FUNCTION getComposite(prob)
         ENDCASE
 ENDFUNC
 
-USE IN A
-USE IN B
-USE IN C
-USE IN D
+USE IN highschool
+USE IN university
+USE IN student
+USE IN score
+USE IN rank
 
 CLEA
 CLOSE ALL

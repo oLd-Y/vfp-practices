@@ -23,19 +23,24 @@ USE m.pub_path + "university" alias university3 exclusive IN 4 order univ_code a
 
 USE m.pub_path + "student" alias student exclusive IN 5 order pass_num
 
-USE m.pub_path + "score" alias score exclusive IN 6 order pass_num
+USE m.pub_path + "score" alias score exclusive IN 6 order sort_score
+
+use m.pub_path + "rank" alias rank in 7 excl order pass_num
+
+select score
+set relation to pass_num into student, ;
+                pass_num into rank
 
 select student
-set relation to pass_num into score, ;
-                high_code into highschool, ;
+set relation to high_code into highschool, ;
                 volu_code1 into university1, ;
                 volu_code2 into university2, ;
                 volu_code3 into university3
 
-create table t_rank ;
-    (rank N(6))
 
-select score
-set order to
-scan
+
+
+
+
+
 
