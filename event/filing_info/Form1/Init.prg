@@ -26,7 +26,7 @@ endwith
 
 && ≥ı ºªØ Grid2
 with thisForm.grid2
-    .recordSource = "score"
+    .recordSource = "student"
     .columnCount = 13
     .readOnly = .T.
     .deleteMark = .F.

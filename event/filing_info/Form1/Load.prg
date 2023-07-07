@@ -28,15 +28,14 @@ USE m.pub_path + "score" alias score exclusive IN 400 order sort_score
 
 use m.pub_path + "rank" alias rank in 500 excl order pass_num
 
-select score
-set relation to pass_num into student, ;
-                pass_num into rank
 
 select student
-set relation to high_code into highschool, ;
+set relation to pass_num into score , ;
+                high_code into highschool, ;
                 volu_code1 into university1, ;
                 volu_code2 into university2, ;
-                volu_code3 into university3
+                volu_code3 into university3, ;
+                pass_num into rank
 
 
 
