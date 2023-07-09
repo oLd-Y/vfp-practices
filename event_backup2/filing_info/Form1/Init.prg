@@ -22,9 +22,11 @@ with thisForm.grid2
 endwith
 
 with thisForm.text1
+    .value = thisForm.grid1.column1.text1.value
 endwith
 
 with thisForm.text2
+    .value = thisForm.grid1.column1.text1.value
 endwith
 
 

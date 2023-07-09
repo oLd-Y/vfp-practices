@@ -14,7 +14,7 @@ clea events
 
 public m.pub_path
 m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
-* use 4 tables
+&&  use 4 tables
 USE m.pub_path + "highschool" alias highschool exclusive IN 100 order high_code
 
 USE m.pub_path + "university" alias university exclusive IN 200 order univ_code
@@ -29,14 +29,15 @@ USE m.pub_path + "score" alias score exclusive IN 400 order sort_score
 use m.pub_path + "rank" alias rank in 500 excl order pass_num
 
 select score
-set relation to pass_num into student, ;
-                pass_num into rank
+set relation to pass_num into rank, ;
+                pass_num into student
 
 select student
 set relation to high_code into highschool, ;
                 volu_code1 into university1, ;
                 volu_code2 into university2, ;
                 volu_code3 into university3
+
 
 
 

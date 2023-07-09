@@ -164,3 +164,15 @@ ENDSCAN
 select t_score
 go top
 ```
+
+# set filter to 
+以下代码，score和highschool并不是只根据student当前指针所在的位置那条记录进行过滤
+也就是说，对于多张表，set filter to 会遍历所有记录将不符合条件的记录筛掉，然后回到原来的指针位置
+
+```visual foxpro
+select student
+set filter to volu_code1 = university.univ_code ;
+
+set filter to pass_num = student.pass_num in score
+set filter to high_code = student.high_code in highschool
+```
