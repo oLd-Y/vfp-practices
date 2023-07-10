@@ -23,7 +23,7 @@ zap in score_distr
 select score
 lnCount = 0
 m.kk=all_score
-DO WHILE !EOF()
+DO whil !EOF()
  	COUNT REST TO m.bb WHILE allo_score=m.kk
 
  	SELECT score_distr
@@ -31,7 +31,7 @@ DO WHILE !EOF()
  	REPLACE sdfk WITH m.bb
  	
  	SELECT score
- 	m.kk=score.all_score
+ 	m.kk=all_score
 endd
 
 
