@@ -1,0 +1,3 @@
+with this
+    .setFocus()
+endwith
