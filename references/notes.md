@@ -84,14 +84,14 @@ APPEND FROM Inventory.dbf FOR ivt_quan  <= 4000
 
 # calculate scale
 ```visual forpro
-select tb_score_distr
+select score_distr
 go top
 SCAN
 SELECT t_score
-count for t_score.all_score <= tb_score_distr.all_score .AND. t_score.all_score > (tb_score_distr.all_score - 10) to m.stu_count
+count for t_score.all_score <= score_distr.all_score .AND. t_score.all_score > (score_distr.all_score - 10) to m.stu_count
 m.scale = str((m.stu_count / recc()) * 100, 10, 5) + "%"
 
-    select tb_score_distr
+    select score_distr
     replace ;
         scale with m.scale, ;
         stu_count with m.stu_count

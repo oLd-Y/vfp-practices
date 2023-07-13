@@ -1,25 +1,11 @@
-with thisForm
-    .height = sysmetric(22) - 18
-    .width = sysmetric(21)
+with this
+    .height = this.grid1.height  + 150
+    .width = this.grid1.width + this.grid2.width + 100
+    .top = 0
+    .left = 0
+    .autoCenter = .T.
 endwith
 
-&& 初始化 Grid1
-with thisForm.grid1
-
-    .setFocus()
-
-
-endwith
-
-
-&& 初始化 Grid2
-with thisForm.grid2
-
-
-
-
-
-endwith
 
 with thisForm.text1
     .readOnly = .T.

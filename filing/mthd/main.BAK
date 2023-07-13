@@ -1,0 +1,57 @@
+ SET TALK OFF
+ SET SAFETY OFF
+ SET NOTIFY OFF
+ SET STATUS OFF
+ SET SCOREBOARD OFF
+ SET DATE ANSI
+ SET CENTURY ON
+ SET DELETED ON
+ SET STATUS BAR OFF
+ SET EXCLUSIVE OFF
+ SET ESCAPE OFF
+ SET SYSMENU OFF
+ SET DEBUG OFF
+ SET MARK TO '-'
+ CLOSE DATABASES 
+ _SCREEN.VISIBLE = .F.
+ ON SHUTDOWN QUIT
+
+
+do ./setEnv
+
+
+
+&& && 当前目录
+&& lcCurDir = AddBS(Sys(5) + CurDir())             && addBs 在末端加 \  ;若存在则不加
+&& && _VFP.ActiveProject.Name 为 当前Project绝对路径 + Project文件名.pjx
+&& && Project文件名
+&& lcPjxName = JustStem(_VFP.ActiveProject.Name)
+&& && Project绝对路径
+&& lcDevPath = JustPath(_VFP.ActiveProject.Name)   && 最后无 \
+&& lcDevPath = AddBS(lcDevPath)        		&& 在末端加 \  ;若存在则不加
+&&
+&& && 添加通用搜索目录
+&& lcSearchDirs = "frm;mthd;rpt;db;"
+&& lcSearchPath = lcDevPath + lcSearchDirs
+&&
+&& && 设置开发路径
+&& && lcDevPath = Sys(5) + Sys(2003) + "\"
+&& && lcDevPath = lcDevPath + AddBS(lcPjxName)
+&& Set Default To (lcDevPath)
+&& && 添加VFP搜索路径
+&& Set Path To (lcSearchPath)
+&&
+&& && -- Show Tips
+&& Activate Screen
+&& && Clear
+&& ? ""
+&& ? "Active Project " + _vfp.ActiveProject.Name
+&& ? "Set Default To " + lcDevPath
+&& ? "Set Path To " + lcSearchPath
+
+
+
+ do form grade
+ READ EVENTS 
+&&  QUIT
+*

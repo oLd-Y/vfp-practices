@@ -27,17 +27,17 @@ set filter to (chinese + english + math) >= 280 ;
             .AND. pass_num = student.pass_num ;
 
 && 定位最低投档分数
-&& 注：此处不知道咋解决。没找到方法定位过滤后的最后一条数据
-if m.filing_num <= m.adm_plan * 1.3
-    go m.filing_num
-else
-    go m.adm_plan * 1.3
-endif
+&& if m.filing_num <= m.adm_plan * 1.3
+    go bott
+&& else
+&&     go m.adm_plan * 1.3
+&& endif
 m.min_score = score.all_score
 m.min_rank = rank.rank
 
 set filter to high_code = student.high_code in highschool
 
+go top
 select university
 
 && && 修改最低投档分数
