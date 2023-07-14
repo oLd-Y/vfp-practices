@@ -176,3 +176,97 @@ set filter to volu_code1 = university.univ_code ;
 set filter to pass_num = student.pass_num in score
 set filter to high_code = student.high_code in highschool
 ```
+
+# 代码创建表单的三种方法
+1. 
+```visual foxpro
+Set Safety Off
+oForm = Createobject('form')
+oForm.AddObject('label1','label')
+oForm.label1.Left = 10
+oForm.label1.Top = 30
+oForm.label1.Caption = "Hello World!"
+oForm.label1.AutoSize = .T.
+oForm.AddObject('text','textbox')
+oForm.Text.Left = 10
+oForm.Text.Top = 10
+oForm.AddObject("bt_close","CommandButton")
+oForm.bt_close.Left = 10
+oForm.bt_close.Top = 50
+oForm.bt_close.Caption = "Close"
+oForm.bt_close.Height = 27
+
+lcFormPath = addBs(justPath(_vfp.activeProject.name)) + "frm\"
+oForm.SaveAs(lcFormPath + "test")
+Release oForm
+Modify Form test
+```
+
+2.
+```visual foxpro
+SET PROCEDURE TO SomeForm
+oForm = CREATEOBJECT("frmTest")
+lcFormPath = addBs(justPath(_vfp.activeProject.name)) + "frm\"
+oForm.SaveAs("MyForm")
+```
+
+3.
+```visual foxpro
+创建表单
+Local Array laForm[1]
+Local loForm
+lcFormPath = addBs(justPath(_vfp.activeProject.name)) + "frm\"
+br = chr(13)
+
+
+Create Form lcFormPath + [frmMain.scx] As Form Nowait
+ASelObj(laForm,1)
+loForm = laForm[1]
+loForm.AddObject("cmd", "CommandButton")
+
+初始化表单
+Local Array laForm[1]
+Local loForm
+lcFormPath = addBs(justPath(_vfp.activeProject.name)) + "frm\"
+&& 换行符
+br = chr(13)
+
+&& 不加 nowait 则会在关闭表单之后才执行后面的语句，cmd就找不到表单了
+modi form lcFormPath + [frmMain.scx] Nowait
+&& Create Form lcFormPath + [frmMain.scx] As Form Nowait
+ASelObj(laForm,1)
+loForm = laForm[1]
+&& loForm.AddObject("cmd", "CommandButton")
+
+cmd = loForm.cmd
+
+with cmd
+    .caption = "Save"
+    .width = 200
+    .height = 100
+    .top = 100
+    .left = 30
+endwith
+
+with loForm
+    .width = 500
+    .height = 200
+    .ShowWindow = 2 && as top level form
+    .Autocenter=.T.
+    .Caption="Main Form"
+endwith
+
+&& m.FormUnload =     ";
+&& Clear Events \;
+&& thisForm.width = 1 ;
+&& "
+
+m.FormUnload = ;
++br+    "Clear Events ";
+
+loForm.WriteMethod( ;
+    "Unload", ;
+    m.FormUnload ;
+)
+```
+
