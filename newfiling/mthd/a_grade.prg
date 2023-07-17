@@ -1,0 +1,293 @@
+SET MARK TO "-"
+SET DATE TO ANSI
+SET HOUR TO 24
+SET DELE ON
+SET CENT ON
+SET TALK OFF
+SET STATUS OFF
+*!* SET STAT BAR OFF
+SET SAFETY OFF
+SET EXCL OFF
+
+CLEA
+CLOSE ALL
+CLOSE DATABASES
+CLEAR ALL && clear variables ..
+
+RAND(-1)
+
+m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
+*!* use 4 tables
+USE m.pub_path + "highschool" alias highschool exclusive IN 100 order high_code
+
+USE m.pub_path + "university" alias university exclusive IN 200 order univ_code
+
+USE m.pub_path + "student" alias student exclusive IN 300 order pass_num
+
+USE m.pub_path + "score" alias score exclusive IN 400 order sort_score
+
+use m.pub_path + "rank" alias rank  exclusive in 500 order pass_num
+
+*!* clear all data from the current exclusive tables
+ZAP IN highSchool
+ZAP IN student
+ZAP IN score
+
+lcStartTime = SECONDS()
+SELECT highSchool
+*!* add 200 records to highSchool
+FOR i = 1 TO 200
+    m.t_code = PADL(i, 3, "0")
+    m.t_name = "Shanghai " + m.t_code + " th High School" 
+    APPEND BLANK 
+    REPLACE NEXT 1 high_code WITH m.t_code, high_name WITH m.t_name
+ENDFOR
+
+&& insert 8w records into student
+m.hs_count = recc("highSchool")
+m.uni_count = recc("university")
+m.stu_count = recc("student")
+m.sco_count = recc("score")
+
+
+FOR i = 1 TO 80000
+    *!* get a random high school code from highSchool
+    SELECT highSchool
+
+    m.rand = INT(RAND() * m.hs_count) + 1
+&&     m.rand = INT(RAND() * recc()) + 1
+    GO m.rand
+&& GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
+    m.high_code = high_code
+
+    && get 3 random university codes from table B
+    && if a student has multiple volunteer, then the university code should be different
+
+    STORE "" TO m.volu_code1, m.volu_code2, m.volu_code3
+	SELECT university
+    m.vol_num = INT(RAND() * 3) + 1
+    FOR j = 1 TO m.vol_num
+        IF j == 1
+            m.rand1 = INT(RAND() * m.uni_count) + 1
+            GO m.rand1
+            m.volu_code1 = university.univ_code
+        ENDIF
+
+        DO WHILE j == 2
+            m.rand2 = INT(RAND() * m.uni_count) + 1
+            GO m.rand2
+            m.volu_code2 = univ_code
+            IF m.volu_code1 == m.volu_code2
+                LOOP
+            ENDIF
+            EXIT
+        ENDDO
+
+        DO WHILE j == 3
+            m.rand3 = INT(RAND() * m.uni_count) + 1
+            GO m.rand3
+            m.volu_code3 = univ_code
+            IF m.volu_code2 == m.volu_code3 .OR. m.volu_code1 == m.volu_code3
+                LOOP
+            ENDIF
+            EXIT
+        ENDDO
+    ENDFOR
+
+	SELECT student
+    && generate a random pass number and id card number
+    m.pass_num = ""
+    m.id_card = ""
+    chars = "0123456789"
+    DO WHILE .T.
+        FOR x = 1 TO 8
+            m.pass_num = m.pass_num + SUBSTR(chars, INT(RAND()*10)+1, 1)
+        ENDFOR
+        FOR y = 1 TO 18
+            m.id_card = m.id_card + SUBSTR(chars, INT(RAND()*10)+1, 1)
+        ENDFOR
+
+        IF SEEK(m.pass_num, "student", "pass_num") .OR. SEEK(m.id_card, "student", "id_card")
+            LOOP
+        ENDIF
+        EXIT
+    ENDDO
+
+    APPEND BLANK
+    REPLACE pass_num WITH m.pass_num, ;
+        stu_name WITH "stu" + RIGHT("00000000" + LTRIM(STR(i)), 8), ;
+        id_card WITH m.id_card, ;
+        high_code WITH m.high_code, ;
+        volu_code1 WITH m.volu_code1, ;
+        volu_code2 WITH m.volu_code2, ;
+        volu_code3 WITH m.volu_code3
+ENDFOR
+
+&& create filing information for each student
+SELECT student
+
+SCAN
+    m.pass_num = student.pass_num
+    m.id_card = student.id_card
+
+    SELECT score
+    && get all score according to the probability
+    m.chinese_score = getChinese(ROUND(RAND() * 100, 1))
+    m.math_score = getMath(ROUND(RAND() * 100, 1))
+    m.english_score = getEnglish(ROUND(RAND() * 100, 1))
+    m.composite_score = getComposite(ROUND(RAND() * 100, 1))
+    m.all_score = m.chinese_score + m.math_score + m.english_score + m.composite_score
+    APPEND BLANK
+    REPLACE pass_num WITH m.pass_num, ;
+            id_card WITH m.id_card, ;
+            chinese WITH m.chinese_score, ;
+            math WITH m.math_score, ;
+            english WITH m.english_score, ;
+            composite WITH m.composite_score, ;
+            all_score WITH m.all_score
+ENDSCAN
+
+select score
+m.i = 0
+SCAN
+    m.i = m.i + 1
+    select rank
+    append blank
+    replace pass_num with score.pass_num
+    replace rank with m.i
+ENDSCAN
+
+lcEndTime = SECONDS()
+
+@ 3, 10 SAY TRANSFORM(lcEndTime - lcStartTime, "@R 999999.999") + " seconds"
+
+FUNCTION getChinese(prob)
+    DO CASE 
+        CASE prob < 0.3
+            RETURN INT(RAND() * 10) + 140
+        CASE prob < 1.3
+            RETURN INT(RAND() * 10) + 130
+        CASE prob < 5.3
+            RETURN INT(RAND() * 10) + 120
+        CASE prob < 16
+            RETURN INT(RAND() * 10) + 110
+        CASE prob < 34
+            RETURN INT(RAND() * 10) + 100
+        CASE prob < 61
+            RETURN INT(RAND() * 10) + 90
+        CASE prob < 80
+            RETURN INT(RAND() * 10) + 80
+        CASE prob < 90
+            RETURN INT(RAND() * 10) + 70
+        CASE prob < 96
+            RETURN INT(RAND() * 10) + 60
+        CASE prob < 99
+            RETURN INT(RAND() * 10) + 50
+        OTHERWISE
+            RETURN INT(RAND() * 10) + 40
+    ENDCASE
+ENDFUNC
+
+FUNCTION getMath(prob)
+    DO CASE 
+        CASE prob < 0.5
+            RETURN INT(RAND() * 10) + 140
+        CASE prob < 3.5
+            RETURN INT(RAND() * 10) + 130
+        CASE prob < 9.5
+            RETURN INT(RAND() * 10) + 120
+        CASE prob < 24.5
+            RETURN INT(RAND() * 10) + 110
+        CASE prob < 43.5
+            RETURN INT(RAND() * 10) + 100
+        CASE prob < 61.5
+            RETURN INT(RAND() * 10) + 90
+        CASE prob < 78.5
+            RETURN INT(RAND() * 10) + 80
+        CASE prob < 90.5
+            RETURN INT(RAND() * 10) + 70
+        CASE prob < 95.5
+            RETURN INT(RAND() * 10) + 60
+        CASE prob < 99.5
+            RETURN INT(RAND() * 10) + 50
+        OTHERWISE
+            RETURN INT(RAND() * 10) + 40    
+    ENDCASE
+ENDFUNC
+
+FUNCTION getEnglish(prob)
+    DO CASE 
+        CASE prob < 0.5
+            RETURN INT(RAND() * 10) + 140
+        CASE prob < 1.5
+            RETURN INT(RAND() * 10) + 130
+        CASE prob < 6.5
+            RETURN INT(RAND() * 10) + 120
+        CASE prob < 25.5
+            RETURN INT(RAND() * 10) + 110
+        CASE prob < 45.5
+            RETURN INT(RAND() * 10) + 100
+        CASE prob < 65.5
+            RETURN INT(RAND() * 10) + 90
+        CASE prob < 80.5
+            RETURN INT(RAND() * 10) + 80
+        CASE prob < 90.5
+            RETURN INT(RAND() * 10) + 70
+        CASE prob < 95.5
+            RETURN INT(RAND() * 10) + 60
+        CASE prob < 99.5
+            RETURN INT(RAND() * 10) + 50
+        OTHERWISE
+            RETURN INT(RAND() * 10) + 40    
+    ENDCASE
+ENDFUNC
+
+FUNCTION getComposite(prob)
+    DO CASE
+        CASE prob < 3
+            RETURN INT(RAND() * 10) + 201
+        CASE prob < 9
+            RETURN INT(RAND() * 11) + 190
+        CASE prob < 21
+            RETURN INT(RAND() * 10) + 180
+        CASE prob < 36
+            RETURN INT(RAND() * 10) + 170
+        CASE prob < 49
+            RETURN INT(RAND() * 10) + 160
+        CASE prob < 64
+            RETURN INT(RAND() * 10) + 150
+        CASE prob < 75
+            RETURN INT(RAND() * 10) + 140
+        CASE prob < 83
+            RETURN INT(RAND() * 10) + 130
+        CASE prob < 89
+            RETURN INT(RAND() * 10) + 120
+        CASE prob < 93
+            RETURN INT(RAND() * 10) + 110
+        CASE prob < 96
+            RETURN INT(RAND() * 10) + 100
+        CASE prob < 98
+            RETURN INT(RAND() * 10) + 90
+        CASE prob < 99
+            RETURN INT(RAND() * 10) + 80
+        CASE prob < 99.5
+            RETURN INT(RAND() * 10) + 70
+        CASE prob < 99.8
+            RETURN INT(RAND() * 10) + 60
+        CASE prob < 99.9
+            RETURN INT(RAND() * 10) + 50
+        OTHERWISE
+            RETURN INT(RAND() * 10) + 40    
+        ENDCASE
+ENDFUNC
+
+USE IN highschool
+USE IN university
+USE IN student
+USE IN score
+USE IN rank
+
+CLEA
+CLOSE ALL
+CLOSE DATABASES
+CLEAR ALL && clear variables ..
