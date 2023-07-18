@@ -26,9 +26,29 @@ br = chr(13)
 
 
 
-
+&& ÐÞ¸Ä filing_info
 modi form filing_info Nowait
 ASelObj(laForm,1)
 loForm = laForm[1]
-m.readFile = fileToStr(lcFilingInfoPath + "Form1/Load.prg")
-loForm.writeMethod("Load", m.readFile)
+loPageFrame = loForm.PageFrame1
+loPage = loPageFrame.Page1
+loGrid1 = loPage.Grid1
+loGrid2 = loPage.Grid2
+
+&& Form1
+m.Form1_Load = fileToStr(lcFilingInfoPath + "Form1/Load.prg")
+loForm.writeMethod("Load", m.Form1_Load)
+
+&& Grid1
+m.Grid1_AfterRowColChange = fileToStr(lcFilingInfoPath + "Form1/PageFrame/Page/Grid1/AfterRowColChange.prg")
+loGrid1.writeMethod("AfterRowColChange", m.Grid1_AfterRowColChange)
+
+
+
+
+
+
+
+
+
+

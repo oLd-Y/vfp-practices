@@ -16,6 +16,7 @@ loForm = laForm[1]
 
 
 && 将修改同步至相应的prg中
-m.gradeForm1Load = loForm.readMethod("Load")
-strToFile(m.gradeForm1Load, lcGradePath + "Form1/Load.prg")
+m.Form1_Load = loForm.readMethod("Load")
+strToFile(m.Form1_Load, lcGradePath + "Form1/Load.prg")
 && m.readFile = fileToStr(lcEventPath + "grade/Load.prg")
+
