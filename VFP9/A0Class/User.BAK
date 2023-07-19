@@ -1,0 +1,13 @@
+Define Class LogUser As Session
+	mcNo, mcName, mcDept, mcAuth, mcKey
+	
+	Procedure init
+		LParameters cNo, cName, cDept, cAuth, cKey
+		
+		This.mcNo = cNo
+		This.mcName = cName
+		This.mcDept = cDept
+		This.mcAuth = cAuth
+		This.mcKey = cKey
+	EndProc
+EndDefine

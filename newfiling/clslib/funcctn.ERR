@@ -1,0 +1,6 @@
+Add Object img As Image Nowait
+第 3 行发生错误: 命令中含有不能识别的短语或关键字。
+Add Object label As Label Nowait
+第 4 行发生错误: 命令中含有不能识别的短语或关键字。
+Add Class funcctn To "mylib"
+第 8 行发生错误: 语句不在过程中。

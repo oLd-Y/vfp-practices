@@ -1,0 +1,31 @@
+Define Class SysConfig As Session
+	_key = ""
+	_name = ""
+	_value = ""
+	
+	* set
+	Function SetKey(lcKey)
+		This._key = lcKey
+	EndFunc
+	
+	Function SetName(lcName)
+		This._name = lcName
+	EndFunc
+	
+	Function SetValue(lcValue)
+		This._value = lcValue
+	EndFunc
+	
+	* get
+	Function GetKeys
+		Retrun This._key
+	EndFunc
+	
+	Function GetName
+		Return This._name
+	EndFunc
+	
+	Function GetValue
+		Return This._value
+	EndFunc
+EndDefine

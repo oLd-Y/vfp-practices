@@ -4,6 +4,7 @@ lcRootPath = addBs(justPath(_vfp.activeProject.name))
 lcFormPath = lcRootPath + "frm\"
 lcEventPath = lcRootPath + "event\"
 lcGradePath = lcEventPath + "grade\"
+lcScoreDistrPath = lcEventPath + "score_distr\"
 lcFilingInfoPath = lcEventPath + "filing_info\"
 && »»ÐÐ·û
 br = chr(13)
@@ -26,20 +27,48 @@ br = chr(13)
 
 
 
+&& ÐÞ¸Ä score_distr
+modi form score_distr Nowait save
+ASelObj(laForm,1)
+loForm = laForm[1]
+loPageFrame = loForm.PageFrame1
+loPage = loPageFrame.Page1
+loGrid1 = loPage.Grid1
+
+&& Form1
+If File(lcScoreDistrPath + "Form1/Load.prg")
+    m.Form1_Load = fileToStr(lcScoreDistrPath + "Form1/Load.prg")
+    loForm.writeMethod("Load", m.Form1_Load)
+EndIf
+
+
 && ÐÞ¸Ä filing_info
 modi form filing_info Nowait
 ASelObj(laForm,1)
 loForm = laForm[1]
-m.Form1_Load = fileToStr(lcFilingInfoPath + "Form1/Load.prg")
-loForm.writeMethod("Load", m.Form1_Load)
+loPageFrame = loForm.PageFrame1
+loPage = loPageFrame.Page1
+loGrid1 = loPage.Grid1
+loGrid2 = loPage.Grid2
 
-m.Form1_Grid1_AfterRowColChange = fileToStr(lcFilingInfoPath + "Form1/Grid1/AfterRowColChange.prg")
-loForm.writeMethod("Grid1.AfterRowColChange", m.Form1_Grid1_AfterRowColChange)
+&& Form1
+If File(lcFilingInfoPath + "Form1/Load.prg")
+    m.Form1_Load = fileToStr(lcFilingInfoPath + "Form1/Load.prg")
+    loForm.writeMethod("Load", m.Form1_Load)
+EndIf
 
+&& Grid1
+If File(lcFilingInfoPath + "Form1/PageFrame/Page/Grid1/AfterRowColChange.prg")
+    m.Grid1_AfterRowColChange = fileToStr(lcFilingInfoPath + "Form1/PageFrame/Page/Grid1/AfterRowColChange.prg")
+    loGrid1.writeMethod("AfterRowColChange", m.Grid1_AfterRowColChange)
+EndIf
 
+If File(lcFilingInfoPath + "Form1/PageFrame/Page/Command1/Click.prg")
+    m.Command1_Click = fileToStr(lcFilingInfoPath + "Form1/PageFrame/Page/Command1/Click.prg")
+    loPage.Command1.writeMethod("Click", m.Command1_Click)
+EndIf
 
-
-
+close filing_info
 
 
 

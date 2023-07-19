@@ -1,0 +1,32 @@
+LParameters lcGrid
+
+With lcGrid
+	.FontName = "Î¢ÈíÑÅºÚ"
+	.FontSize = 12
+	.ForeColor = RGB(248, 248, 248)
+	.GridLineColor = RGB(72, 72, 72)
+	.HeaderHeight = 40
+	.ReadOnly = .T.
+	.RecordSourceType = 1
+	.RowHeight = 36
+EndWith
+
+lcWidth = 0
+For i = 1 To lcGrid.ColumnCount
+	tmp = LTrim(Str(i) )
+	With lcGrid
+		.Column&tmp..BackColor = RGB(0, 20, 40)
+		.Column&tmp..FontName = "Î¢ÈíÑÅºÚ"
+		.Column&tmp..FontSize = 12
+		.Column&tmp..Movable = .F.
+		.Column&tmp..Width = 75
+		.Column&tmp..Header1.Alignment = 2
+		.Column&tmp..Header1.FontName = "Î¢ÈíÑÅºÚ"
+		.Column&tmp..Header1.FontSize = 12
+		.Column&tmp..Header1.BackColor = RGB(96, 96, 96)
+		.Column&tmp..Header1.ForeColor = RGB(248, 248, 248)
+	EndWith
+	If i < lcGrid.ColumnCount
+		lcWidth = lcWidth + lcGrid.Column&tmp..Width
+	EndIf
+EndFor
