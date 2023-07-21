@@ -1,1 +1,2 @@
+close data
 clear events

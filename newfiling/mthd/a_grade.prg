@@ -1,32 +1,17 @@
-SET MARK TO "-"
-SET DATE TO ANSI
-SET HOUR TO 24
-SET DELE ON
-SET CENT ON
-SET TALK OFF
-SET STATUS OFF
-*!* SET STAT BAR OFF
-SET SAFETY OFF
-SET EXCL OFF
-
-CLEA
-CLOSE ALL
 CLOSE DATABASES
 CLEAR ALL && clear variables ..
 
 RAND(-1)
 
-m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
-*!* use 4 tables
-USE m.pub_path + "highschool" alias highschool exclusive IN 100 order high_code
+USE highschool alias highschool exclusive IN 100 order high_code
 
-USE m.pub_path + "university" alias university exclusive IN 200 order univ_code
+USE university alias university exclusive IN 200 order univ_code
 
-USE m.pub_path + "student" alias student exclusive IN 300 order pass_num
+USE student alias student exclusive IN 300 order pass_num
 
-USE m.pub_path + "score" alias score exclusive IN 400 order sort_score
+USE score alias score exclusive IN 400 order sort_score
 
-use m.pub_path + "rank" alias rank  exclusive in 500 order pass_num
+use rank alias rank  exclusive in 500 order pass_num
 
 *!* clear all data from the current exclusive tables
 ZAP IN highSchool
@@ -115,7 +100,7 @@ FOR i = 1 TO 80000
 
     APPEND BLANK
     REPLACE pass_num WITH m.pass_num, ;
-        stu_name WITH "stu" + RIGHT("00000000" + LTRIM(STR(i)), 8), ;
+        stu_name WITH "stu" + RIGHT("00000000" + LTRIM(STR(i)), 5), ;
         id_card WITH m.id_card, ;
         high_code WITH m.high_code, ;
         volu_code1 WITH m.volu_code1, ;
@@ -157,9 +142,20 @@ SCAN
     replace rank with m.i
 ENDSCAN
 
+USE IN highschool
+USE IN university
+USE IN student
+USE IN score
+USE IN rank
+
+
 lcEndTime = SECONDS()
 
 @ 3, 10 SAY TRANSFORM(lcEndTime - lcStartTime, "@R 999999.999") + " seconds"
+
+
+CLOSE DATABASES
+CLEAR ALL && clear variables ..
 
 FUNCTION getChinese(prob)
     DO CASE 
@@ -281,13 +277,4 @@ FUNCTION getComposite(prob)
         ENDCASE
 ENDFUNC
 
-USE IN highschool
-USE IN university
-USE IN student
-USE IN score
-USE IN rank
 
-CLEA
-CLOSE ALL
-CLOSE DATABASES
-CLEAR ALL && clear variables ..

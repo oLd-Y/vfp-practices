@@ -1,30 +1,17 @@
-SET MARK TO "-"
-SET DATE TO ANSI
-SET HOUR TO 24
-SET DELE ON
-SET CENT ON
-SET TALK OFF
-SET STATUS OFF
-*!* SET STAT BAR OFF
-SET SAFETY OFF
-SET EXCL OFF
-
-CLEA
-CLOSE ALL
 CLOSE DATABASES
 CLEAR ALL && clear variables ..
 
 RAND(-1)
 
-m.pub_path = "D:\Desktop\vfp-practices\grade\dbf\"
-*!* use 4 tables
-USE m.pub_path + "highschool" exclusive IN 1
+USE highschool alias highschool exclusive IN 100 order high_code
 
-USE m.pub_path + "university" exclusive IN 2
+USE university alias university exclusive IN 200 order univ_code
 
-USE m.pub_path + "student" exclusive IN 3
+USE student alias student exclusive IN 300 order pass_num
 
-USE m.pub_path + "score" exclusive IN 4
+USE score alias score exclusive IN 400 order sort_score
+
+use rank alias rank  exclusive in 500 order pass_num
 
 *!* clear all data from the current exclusive tables
 ZAP IN highSchool
@@ -41,11 +28,12 @@ FOR i = 1 TO 200
     REPLACE NEXT 1 high_code WITH m.t_code, high_name WITH m.t_name
 ENDFOR
 
-*!* insert 8w records into student
+&& insert 8w records into student
 m.hs_count = recc("highSchool")
 m.uni_count = recc("university")
 m.stu_count = recc("student")
 m.sco_count = recc("score")
+
 
 FOR i = 1 TO 80000
     *!* get a random high school code from highSchool
@@ -53,23 +41,20 @@ FOR i = 1 TO 80000
 
     m.rand = INT(RAND() * m.hs_count) + 1
 &&     m.rand = INT(RAND() * recc()) + 1
-    ?"m.hs_count = " + str(m.hs_count, 6)
-    ?"m.rand = " + str(m.rand, 6)
     GO m.rand
 && GO IIF(!BETWEEN(m.rand, 1, RECC()), 1, m.rand)
     m.high_code = high_code
-    
-    *!* get 3 random university codes from table B
-    * if a student has multiple volunteer, then the university code should be different
-   
+
+    && get 3 random university codes from table B
+    && if a student has multiple volunteer, then the university code should be different
 
     STORE "" TO m.volu_code1, m.volu_code2, m.volu_code3
-	 SELECT university
+	SELECT university
     m.vol_num = INT(RAND() * 3) + 1
     FOR j = 1 TO m.vol_num
         IF j == 1
             m.rand1 = INT(RAND() * m.uni_count) + 1
-            GO 1
+            GO m.rand1
             m.volu_code1 = university.univ_code
         ENDIF
 
@@ -95,7 +80,7 @@ FOR i = 1 TO 80000
     ENDFOR
 
 	SELECT student
-    *!* generate a random pass number and id card number
+    && generate a random pass number and id card number
     m.pass_num = ""
     m.id_card = ""
     chars = "0123456789"
@@ -113,10 +98,9 @@ FOR i = 1 TO 80000
         EXIT
     ENDDO
 
-
     APPEND BLANK
     REPLACE pass_num WITH m.pass_num, ;
-        stu_name WITH "stu" + RIGHT("00000000" + LTRIM(STR(i)), 8), ;
+        stu_name WITH "stu" + RIGHT("00000000" + LTRIM(STR(i)), 11), ;
         id_card WITH m.id_card, ;
         high_code WITH m.high_code, ;
         volu_code1 WITH m.volu_code1, ;
@@ -124,17 +108,15 @@ FOR i = 1 TO 80000
         volu_code3 WITH m.volu_code3
 ENDFOR
 
-*!* create filing information for each student
+&& create filing information for each student
 SELECT student
-&& »Ö¸´Õý³£ÅÅÐò
-SET ORDER TO
 
 SCAN
     m.pass_num = student.pass_num
     m.id_card = student.id_card
 
     SELECT score
-    *!* get all score according to the probability
+    && get all score according to the probability
     m.chinese_score = getChinese(ROUND(RAND() * 100, 1))
     m.math_score = getMath(ROUND(RAND() * 100, 1))
     m.english_score = getEnglish(ROUND(RAND() * 100, 1))
@@ -149,6 +131,25 @@ SCAN
             composite WITH m.composite_score, ;
             all_score WITH m.all_score
 ENDSCAN
+
+select score
+m.i = 0
+SCAN
+    m.i = m.i + 1
+    select rank
+    append blank
+    replace pass_num with score.pass_num
+    replace rank with m.i
+ENDSCAN
+
+USE IN highschool
+USE IN university
+USE IN student
+USE IN score
+USE IN rank
+
+CLOSE DATABASES
+CLEAR ALL && clear variables ..
 
 lcEndTime = SECONDS()
 
@@ -274,12 +275,4 @@ FUNCTION getComposite(prob)
         ENDCASE
 ENDFUNC
 
-USE IN A
-USE IN B
-USE IN C
-USE IN D
 
-CLEA
-CLOSE ALL
-CLOSE DATABASES
-CLEAR ALL && clear variables ..

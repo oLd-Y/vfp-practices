@@ -1,54 +1,47 @@
 Local Array laForm[1]
-Local loForm
+Local loForm1
 lcRootPath = addBs(justPath(_vfp.activeProject.name))
 lcFormPath = lcRootPath + "frm\"
 lcEventPath = lcRootPath + "event\"
-&& 换行符
-br = chr(13)
-
 
 && 不加 nowait 则会在关闭表单之后才执行后面的语句，cmd就找不到表单了
 && (假）不可以添加 save 参数, 否则打开其他表单就无法获取相应的表单对象了 (暂不确定是否为真)
 modi form filing_info NOWAIT SAVE
 ASelObj(laForm,1)
-loForm = laForm[1]
+loForm1 = laForm[1]
 && PageFrames
-loPageFrame = loForm.PageFrame1
+loPageFrame1 = loForm1.PageFrame1
 
 && Pages
-loPage = loPageFrame.Page1
+loPage1 = loPageFrame1.Page1
 
 && Grids
-loGrid1 = loPage.Grid1
-loGrid2 = loPage.Grid2
+loGrid1 = loPage1.Grid1
+loGrid2 = loPage1.Grid2
 
 && TextBoxes
-loText1 = loPage.Text1
-loText2 = loPage.Text2
-loText3 = loPage.Text3
+loText1 = loPage1.Text1
+loText2 = loPage1.Text2
+loText3 = loPage1.Text3
+loText4 = loPage1.Text4
 
 && Shapes
-loShape1 = loPage.Shape1
-loShape2 = loPage.Shape2
 
-&& ComboBoxes
-loCombo1 = loPage.Combo1
+
 
 && CommandButtons
-loCommand1 = loPage.Command1
-loCommand2 = loPage.Command2
-
+loCommand1 = loPage1.Command1
 
 && Labels
-loLabel1 = loPage.Label1
-loLabel2 = loPage.Label2
-loLabel3 = loPage.Label3
+loLabel1 = loPage1.Label1
+loLabel2 = loPage1.Label2
+loLabel3 = loPage1.Label3
+loLabel4 = loPage1.Label4 && 投档人数
 
 
 
-
-
-with loForm
+&& 主表单 Form1
+with loForm1
 
     .AddProperty("SysInfo", NewObject("SysInfo", "SysInfo.prg")) && 添加表单系统信息
 
@@ -60,7 +53,7 @@ with loForm
     .ControlBox = .T.
     .Enabled = .T.
     .FontSize = 9
-    .Height = loForm.SysInfo.FormH()
+    .Height = loForm1.SysInfo.FormH()
     .Left = 0
     .MaxButton = .F.
     .MinButton = .T.
@@ -72,14 +65,15 @@ with loForm
     .TitleBar = 1 && 打开
     .Top = 0
     .Visible = .F.
-    .Width = loForm.SysInfo.FormW()
+    .Width = loForm1.SysInfo.FormW()
     .WindowState = 0 && 普通
     .WindowType = 1 && 模式
     .ZoomBox = .F.
 
 endwith
 
-With loPageFrame
+&& 主页框 PageFrame1
+With loPageFrame1
 
     .ActivePage = 1
     .Height = 528
@@ -92,20 +86,58 @@ With loPageFrame
     .TabStyle = 1 && 非两端
     .Themes = .F.
     .Top = 0
-    .Width = loForm.SysInfo.FormW()
-    .Height = loForm.SysInfo.FormH()
+    .Width = loForm1.SysInfo.FormW()
+    .Height = loForm1.SysInfo.FormH()
 
 EndWith
 
-
-With loPage
+&& 投档信息页 Page1
+With loPage1
 
     .BackColor = RGB(192, 216, 243)
 
 EndWith
 
-&& Grids
+&& 外层框 Shape1
+loShape1 = loPage1.Shape1
+With loShape1
+
+    .BackStyle = 0 && 透明
+    .BorderColor = RGB(87, 121, 215)
+    .Curvature = 5 && 指定形状控件的角的曲率
+    .FillStyle = 1 && 透明
+    .Height = 86
+    .Left = 3
+    .SpecialEffect = 0 && 3维
+    .Top = 4
+
+EndWith
+
+&& 名称图形 Shape2
+loShape2 = loPage1.Shape2
+With loShape2
+
+    .BackColor = RGB(156, 181, 232)
+    .BorderStyle = 0 && 透明
+    .Height = 18
+    .Left = 4
+    .Top = 71
+    .Width = 487
+
+EndWith
+
+
+&& 大学表 Grid1
 with loGrid1
+
+    .RecordSource = "university"
+    .RecordSourceType = 1
+
+    .Left = 0
+    && 没法获取在Form1.Load方法中运行时添加的表单
+    .Top = loForm1.SysInfo.PFGridT()
+    .Width = loForm1.SysInfo.PFGridW()
+    .Height = loForm1.SysInfo.PFGridH()
 
     .AllowCellSelection = .F.
     .AllowHeaderSizing = .F.
@@ -121,20 +153,13 @@ with loGrid1
     .Height = 612
     .HighlightForeColor = RGB(0, 0, 0)
     .HighlightStyle = 2 && 允许高亮并保持高亮可见
-    .Left = 0
     .Panel = 1 && 右
     .ReadOnly = .T.
     .RecordMark = .F.
-    .RecordSource = "university"
-    .RecordSourceType = 1
     .RowHeight = 22
     .ScrollBars = 3 && 既水平又垂直(默认)
     .SplitBar = .F.
     .TabIndex = 1
-    && 没法获取在Form1.Load方法中运行时添加的表单
-    .Top = loForm.SysInfo.PFGridT()
-    .Width = loForm.SysInfo.PFGridW()
-    .Height = loForm.SysInfo.PFGridH()
 
 	.SetAll("Alignment", 2, "Header")
 	.SetAll("backColor", RGB(210, 210, 210), "Header")
@@ -164,6 +189,7 @@ with loGrid1
 
 endwith
 
+&& 投档信息表 Grid2
 with loGrid2
 
     && --------------------- Grid 属性设置 ---------------------
@@ -185,15 +211,16 @@ with loGrid2
     .Panel = 1 && 右
     .ReadOnly = .T.
     .RecordMark = .F.
-    .RecordSource = "score"
+    .RecordSource = "file_info"
     .RecordSourceType = 1
     .RowHeight = 22
     .ScrollBars = 3 && 既水平又垂直(默认)
+    .ShowWindow = 1 && 在顶层表单中
     .SplitBar = .F.
     .TabIndex = 1
-    .Top = loForm.SysInfo.PFGridT()
-    .Width = loForm.SysInfo.PFGridW() - loGrid2.Left
-    .Height = loForm.SysInfo.PFGridH()
+    .Top = loForm1.SysInfo.PFGridT()
+    .Width = loForm1.SysInfo.PFGridW() - loGrid2.Left
+    .Height = loForm1.SysInfo.PFGridH()
     .Visible = .T.
 
     && --------------------- Grid 子属性设置 ---------------------
@@ -207,61 +234,61 @@ with loGrid2
 	.SetAll("FontSize", 10, "Column")
 	.SetAll("Format", "Z", "Column")
 
-    .Columns(1).ControlSource = "student.pass_num"
+    .Columns(1).ControlSource = "file_info.pass_num"
     .Columns(1).Width = 8 * 10
     .Columns(1).Header1.Caption = "准考证号"
 
-    .Columns(2).ControlSource = "student.id_card"
+    .Columns(2).ControlSource = "file_info.id_card"
     .Columns(2).Width = 8 * 20
     .Columns(2).Header1.Caption = "身份证号"
 
-    .Columns(3).ControlSource = "student.stu_name"
+    .Columns(3).ControlSource = "file_info.stu_name"
     .Columns(3).Width = 8 * 8
     .Columns(3).Header1.Caption = "学生姓名"
 
-    .Columns(4).ControlSource = "highSchool.high_name"
+    .Columns(4).ControlSource = "file_info.high_name"
     .Columns(4).Width = 8 * 24
     .Columns(4).Header1.Caption = "高中名称"
 
-    .Columns(5).ControlSource = "score.all_score"
+    .Columns(5).ControlSource = "file_info.all_score"
     .Columns(5).Header1.Caption = "总分"
     .Columns(5).Width = 8 * 6
 
-    .Columns(6).ControlSource = "score.chinese"
+    .Columns(6).ControlSource = "file_info.chinese"
     .Columns(6).Header1.Caption = "语文"
     .Columns(6).Width = 8 * 6
 
-    .Columns(7).ControlSource = "score.math"
+    .Columns(7).ControlSource = "file_info.math"
     .Columns(7).Header1.Caption = "数学"
     .Columns(7).Width = 8 * 6
 
-    .Columns(8).ControlSource = "score.english"
+    .Columns(8).ControlSource = "file_info.english"
     .Columns(8).Header1.Caption = "英语"
     .Columns(8).Width = 8 * 6
 
-    .Columns(9).ControlSource = "score.composite"
+    .Columns(9).ControlSource = "file_info.composite"
     .Columns(9).Header1.Caption = "综合"
     .Columns(9).Width = 8 * 6
 
-    .Columns(10).ControlSource = "rank.rank"
+    .Columns(10).ControlSource = "file_info.rank"
     .Columns(10).Header1.Caption = "排名"
     .Columns(10).Width = 8 * 6
 
-    .Columns(11).ControlSource = "university1.univ_name"
+    .Columns(11).ControlSource = "file_info.volu_name1"
     .Columns(11).Header1.Caption = "第一志愿"
     .Columns(11).Width = 8 * 22
 
-    .Columns(12).ControlSource = "university2.univ_name"
+    .Columns(12).ControlSource = "file_info.volu_name2"
     .Columns(12).Header1.Caption = "第二志愿"
     .Columns(12).Width = 8 * 22
 
-    .Columns(13).ControlSource = "university3.univ_name"
+    .Columns(13).ControlSource = "file_info.volu_name3"
     .Columns(13).Header1.Caption = "第三志愿"
     .Columns(13).Width = 8 * 22
 
 endwith
 
-&& TextBoxes
+&& 最低投档分数 Text1
 With loText1
 
     .Alignment = 2 && 居中
@@ -277,18 +304,37 @@ With loText1
 &&     .Left = 41
     .Margin = 1
     .MaxLength = 6
+    .ReadOnly = .T.
     .Themes = .F.
 &&     .Top = 11
     .Width = 64
 
 EndWith
 
+&& 最低投档名次 Text2
 With loText2
 
-
+    .Alignment = 2 && 居中
+    .BackColor = RGB(222, 234, 250)
+    .BackStyle = 1 && 不透明
+    .BorderColor = RGB(63, 123, 200)
+    .BorderStyle = 1 && 固定单线
+    .FontName = "微软雅黑"
+    .FontSize = 10
+    .ForeColor = RGB(16, 48, 96)
+    .Format = "K"
+    .Height = 25
+&&     .Left = 41
+    .Margin = 1
+    .MaxLength = 6
+    .ReadOnly = .T.
+    .Themes = .F.
+&&     .Top = 11
+    .Width = 64
 
 EndWith
 
+&& 查询学生姓名文本框 Text3
 With loText3
 
     .Alignment = 0
@@ -303,66 +349,82 @@ With loText3
     .Height = 25
 &&     .Left = 0
     .Margin = 1
-    .MaxLength = 6
+    .MaxLength = 18
     .Themes = .F.
 &&     .Top = 40
-    .Width = 100
 
 EndWith
 
-&& Shapes
-With loShape1
+&& 查询中学名称文本框 Text4
+With loText4
 
-    .BackStyle = 0 && 透明
-    .BorderColor = RGB(87, 121, 215)
-    .Curvature = 5 && 指定形状控件的角的曲率
-    .FillStyle = 1 && 透明
-    .Height = 86
-    .Left = 3
-    .SpecialEffect = 0 && 3维
-    .Top = 4
-    .Visible = .T.
-    .Width = 522
-
-EndWith
-
-With loShape2
-
-    .BackColor = RGB(156, 181, 232)
-    .BorderStyle = 0 && 透明
-    .Height = 18
-    .Left = 4
-    .Top = 71
-    .Width = 487
-
-EndWith
-
-&& ComboBoxes
-With loCombo1
-
-    .Alignment = 0 && 左（默认）
+    .Alignment = 0
     .BackColor = RGB(222, 234, 250)
+    .BackStyle = 1 && 不透明
     .BorderColor = RGB(63, 123, 200)
-    .DisplayCount = 3 && 下拉框中的行的个数
+    .BorderStyle = 1 && 固定单线
     .FontName = "微软雅黑"
-    .FontSize = 11
+    .FontSize = 10
     .ForeColor = RGB(16, 48, 96)
-    .Height = 23
-    .ItemForeColor = RGB(16, 48, 96)
-    .Left = 41
-    .Margin = 0
-    .RowSource = "全部," + "学生姓名, 高中名称, 身份证号"
-    .RowSourceType = 1
-    .SpecialEffect = 1 && 平面
-    .Style = 2 && 下拉列表框
-    .TabIndex = 3
-    .Top = 40
-    .Width = 99
-    .Value = "全部"
+    .Format = "K"
+    .Height = 25
+&&     .Left = 0
+    .Margin = 1
+    .MaxLength = 18
+    .Themes = .F.
+&&     .Top = 40
 
 EndWith
 
-&& 打印报表按钮
+&& 查询准考证号文本框 Text5
+loText5 = loPage1.Text5
+With loText5
+
+    .Alignment = 0
+    .BackColor = RGB(222, 234, 250)
+    .BackStyle = 1 && 不透明
+    .BorderColor = RGB(63, 123, 200)
+    .BorderStyle = 1 && 固定单线
+    .FontName = "微软雅黑"
+    .FontSize = 10
+    .ForeColor = RGB(16, 48, 96)
+    .Format = "K"
+    .Height = 25
+&&     .Left = 0
+    .Margin = 1
+    .MaxLength = 18
+    .Themes = .F.
+&&     .Top = 40
+
+EndWith
+
+
+&& && ComboBoxes
+&& With loCombo1
+&&
+&&     .Alignment = 0 && 左（默认）
+&&     .BackColor = RGB(222, 234, 250)
+&&     .BorderColor = RGB(63, 123, 200)
+&&     .DisplayCount = 3 && 下拉框中的行的个数
+&&     .FontName = "微软雅黑"
+&&     .FontSize = 11
+&&     .ForeColor = RGB(16, 48, 96)
+&&     .Height = 23
+&&     .ItemForeColor = RGB(16, 48, 96)
+&&     .Left = 41
+&&     .Margin = 0
+&&     .RowSource = "全部," + "学生姓名, 高中名称, 身份证号"
+&&     .RowSourceType = 1
+&&     .SpecialEffect = 1 && 平面
+&&     .Style = 2 && 下拉列表框
+&&     .TabIndex = 3
+&&     .Top = 40
+&&     .Width = 99
+&&     .Value = "全部"
+&&
+&& EndWith
+
+&& 打印报表按钮 Command1
 With loCommand1
 
     .AutoSize = .T.
@@ -379,22 +441,7 @@ With loCommand1
 
 EndWith
 
-With loCommand2
-
-    .AutoSize = .F.
-    .BackColor = RGB(192, 216, 243)
-    .Caption = "查询"
-    .FontName = "微软雅黑"
-    .FontSize = 10
-    .ForeColor = RGB(16, 48, 96)
-    .Height = 29
-&&     .Left = 104
-    .TabIndex = 27
-&&     .Top = 38
-    .Width = 35
-
-EndWith
-
+&& 最低投档分数 Label1
 With loLabel1
 
     .Alignment = 1 && 左（默认）
@@ -411,6 +458,7 @@ With loLabel1
 
 EndWith
 
+&& 最低投档名次 Label2
 With loLabel2
 
     .Alignment = 1 && 左（默认）
@@ -427,13 +475,13 @@ With loLabel2
 
 EndWith
 
+&& 请指定查询类型 Label3
 With loLabel3
 
     .Alignment = 1 && 左（默认）
     .AutoSize = .T.
     .BackStyle = 0 && 透明
     .BorderStyle = 0 && 无（默认）
-    .Caption = "请指定查询类型"
     .FontName = "微软雅黑"
     .FontSize = 10
     .ForeColor = RGB(16, 48, 96)
@@ -443,49 +491,78 @@ With loLabel3
 
 EndWith
 
+&& 投档人数标签 Label4
+With loLabel4
+
+    .Alignment = 1 && 左（默认）
+    .AutoSize = .T.
+    .BackStyle = 0 && 透明
+    .BorderStyle = 0 && 无（默认）
+    .FontName = "微软雅黑"
+    .FontSize = 10
+    .ForeColor = RGB(16, 48, 96)
+    .Height = 21
+    .TabIndex = 36
+
+EndWith
+
 
 && 跟随设置，设置关联的属性
 
-&& 第一个下方的形状
+&& 第一个下方的形状 Shape2
 loShape2.Width = loShape1.Width - 2
 
-&& 最低投档分数
-loLabel1.Top = loShape1.Top + 10
-loLabel1.Left = loShape1.Left + 2
+&& && 最低投档分数 Label1
+&& loLabel1.Top = loShape1.Top + 10
+&& loLabel1.Left = loShape1.Left + 2
+&&
+&& && 查询类型标签 Label3
+&& loLabel3.Top = loLabel1.Top
+&& loLabel3.Left = loText1.Left + loText1.Width + 10
+&&
+&& && 最低投档分数文本框 Text1
+&& loText1.Top = loLabel1.Top
+&& loText1.Left = loLabel1.Left + loLabel1.Width + 10
+&&
+&& && 最低投档名次标签 Label2
+&& loLabel2.Top = loLabel1.Top + loLabel1.Height + 10
+&& loLabel2.Left = loLabel1.Left
+&&
+&& && 最低投档排名 Text2
+&& loText2.Top = loLabel2.Top
+&& loText2.Left = loLabel2.Left + loLabel2.Width + 10
+&&
+&& && 投档人数标签 Label4
+&& loLabel4.Top = loLabel2.Top
+&& loLabel4.Left = loText2.Left + loText2.Width + 10
+&&
+&& && 投档人数文本框 Text4
+&& loText4.Top = loLabel4.Top
+&& loText4.Left = loLabel4.Left + loLabel4.Width + 10
+&&
+&& && 投档人数 Label3
+&& loText3.Top = loText2.Top
+&& loText3.Left = loText2.Left + loText2.Width + 10
+&&
+&& && 打印报表按钮 Command1
+&& loCommand1.Left = loText4.Left + loText4.Width + 10
+&& loCommand1.Top = loText4.Top - 5
+&&
+&& && 准考证号、高中名称、身份证号的多选框 Combo1
+&& loCombo1.Top = loLabel3.Top
+&& loCombo1.Left = loLabel3.Left + loLabel3.Width + 10
+&&
+&& && 查询内容文本框 Text3
+&& loText3.Top = loCombo1.Top - 2
+&& loText3.Left = loCombo1.Left + loCombo1.Width + 10
+&&
+&& && 查询按钮 Command2
+&& loCommand2.Top = loText3.Top - 3
+&& loCommand2.Left = loText3.Left + loText3.Width + 5
 
-&& 查询类型标签
-loLabel3.Top = loLabel1.Top
-loLabel3.Left = loText1.Left + loText1.Width + 10
-
-loText1.Top = loLabel1.Top
-loText1.Left = loLabel1.Left + loLabel1.Width + 10
-
-&& 最低投档名次标签
-loLabel2.Top = loLabel1.Top + loLabel1.Height + 10
-loLabel2.Left = loLabel1.Left
-
-&& 最低投档排名文本框
-loText2.Top = loLabel2.Top
-loText2.Left = loLabel2.Left + loLabel2.Width + 10
-
-&& 打印报表按钮
-loCommand1.Left = loText2.Left + loText2.Width + 10
-loCommand1.Top = loText2.Top - 5
-
-&& 准考证号、高中名称、身份证号的多选框
-loCombo1.Top = loLabel3.Top
-loCombo1.Left = loLabel3.Left + loLabel3.Width + 10
-
-&& 查询内容文本框
-loText3.Top = loCombo1.Top - 2
-loText3.Left = loCombo1.Left + loCombo1.Width + 10
-
-&& 查询按钮
-loCommand2.Top = loText3.Top - 3
-loCommand2.Left = loText3.Left + loText3.Width + 5
 
 
-do prgSyncForm
+do cp2filing_info
 
 
 
