@@ -1,67 +1,84 @@
-&& With This
-&& 	.Text1.value = file_info.pass_num
-&& 	.Text2.value = file_info.id_card
-&& 	.Text3.value = file_info.stu_name
-&& 	.Text4.value = file_info.high_name
-&& 	.Text5.value = file_info.chinese
-&& 	.Text6.value = file_info.math
-&& 	.Text7.value = file_info.composite
-&& 	.Text8.value = file_info.english
-&& 	.Text9.value = file_info.volu_name1
-&& 	.Text10.value = file_info.volu_name2
-&& 	.Text11.value = file_info.volu_name3
-&& EndWith
 
 Do Case
-    Case Len(ThisForm.Text1.Value) # 8
-        MessageBox("   准考证号长度有误", 64, "信息")
+    Case Len(AllTrim(ThisForm.Text1.Value)) # 8
+        MessageBox("   准考证号长度有误", 16, "错误")
         ThisForm.Text1.SetFocus
         Return
-    Case Len(ThisForm.Text2.Value) # 18
-        MessageBox("   身份证号长度有误", 64, "信息")
+    Case Len(AllTrim(ThisForm.Text2.Value)) # 18
+        MessageBox("   身份证号长度有误", 16, "错误")
         ThisForm.Text2.SetFocus
         Return
-    Case ThisForm.Text5.Value > 100 .OR. ThisForm.Text5.Value < 0
-        MessageBox("   语文成绩有误", 64, "信息")
+    Case ThisForm.Text5.Value > 150 .OR. ThisForm.Text5.Value < 0
+        MessageBox("   语文成绩有误", 16, "错误")
         ThisForm.Text5.SetFocus
         Return
-    Case ThisForm.Text6.Value > 100 .OR. ThisForm.Text6.Value < 0
-        MessageBox("   数学成绩有误", 64, "信息")
+    Case ThisForm.Text6.Value > 150 .OR. ThisForm.Text6.Value < 0
+        MessageBox("   数学成绩有误", 16, "错误")
         ThisForm.Text6.SetFocus
         Return
-    Case ThisForm.Text7.Value > 100 .OR. ThisForm.Text7.Value < 0
-        MessageBox("   英语成绩有误", 64, "信息")
+    Case ThisForm.Text7.Value > 150 .OR. ThisForm.Text7.Value < 0
+        MessageBox("   英语成绩有误", 16, "错误")
         ThisForm.Text7.SetFocus
         Return
-    Case ThisForm.Text8.Value > 100 .OR. ThisForm.Text8.Value < 0
-        MessageBox("   综合成绩有误", 64, "信息")
+    Case ThisForm.Text8.Value > 210 .OR. ThisForm.Text8.Value < 0
+        MessageBox("   综合成绩有误", 16, "错误")
         ThisForm.Text8.SetFocus
         Return
 EndCase
 
 
+m.all_score = ThisForm.Text5.Value + ThisForm.Text6.Value + ThisForm.Text7.Value + ThisForm.Text8.Value
+Select file_info
+Go Top
+Locate For all_score < m.all_score
+m.rank = file_info.rank
+
+Append Blank
+Replace pass_num with ThisForm.Text1.Value,;
+        id_card with ThisForm.Text2.Value,;
+        stu_name with ThisForm.Text3.Value,;
+        high_name with ThisForm.Text4.Value,;
+        chinese with ThisForm.Text5.Value,;
+        math with ThisForm.Text6.Value,;
+        english with ThisForm.Text7.Value,;
+        composite with ThisForm.Text8.Value,;
+        volu_name1 with ThisForm.Combo1.Value,;
+        volu_name2 with ThisForm.Combo2.Value,;
+        volu_name3 with ThisForm.Combo3.Value,;
+        all_score with m.all_score,;
+        rank with m.rank
+
+Scan Rest
+    Replace rank with rank + 1
+EndScan
+
+Flush
+
+ThisForm.isAdd = true
+ThisForm.Release()
+
 && do case
-&& 	case thisForm.text7.value > thisForm.text4.value
+&& 	case (AllTrim(ThisForm.Text7.Value)) > thisForm.text4.value
 && 		MessageBox("   出库托盘数不应大于当前托盘数", 64, "信息")
 && 		thisForm.text7.setFocus
 && 		return
 &&
-&& 	case thisForm.text8.value > thisForm.text5.value
+&& 	case (AllTrim(ThisForm.Text8.Value)) > (AllTrim(ThisForm.Text5.Value))
 && 		MessageBox("   出库件数不应大于当前件数", 64, "信息")
 && 		thisForm.text8.setFocus
 && 		return
 &&
-&& 	case thisForm.text9.value > thisForm.text6.value
+&& 	case thisForm.text9.value > (AllTrim(ThisForm.Text6.Value))
 && 		MessageBox("   出库重量不应大于当前重量", 64, "信息")
 && 		thisForm.text9.setFocus
 && 		return
 &&
-&& 	case thisForm.text7.value < 0
+&& 	case (AllTrim(ThisForm.Text7.Value)) < 0
 && 		MessageBox("   出库托盘数不应小于0", 64, "信息")
 && 		thisForm.text7.setFocus
 && 		return
 &&
-&& 	case thisForm.text8.value < 0
+&& 	case (AllTrim(ThisForm.Text8.Value)) < 0
 && 		MessageBox("   出库件数不应小于0", 64, "信息")
 && 		thisForm.text8.setFocus
 && 		return
@@ -71,7 +88,7 @@ EndCase
 && 		thisForm.text9.setFocus
 && 		return
 &&
-&& 	case thisForm.text7.value + thisForm.text8.value + thisForm.text9.value = 0
+&& 	case (AllTrim(ThisForm.Text7.Value)) + (AllTrim(ThisForm.Text8.Value)) + thisForm.text9.value = 0
 && 		return
 && endCase
 &&
@@ -86,9 +103,9 @@ EndCase
 &&
 && * 出库
 && select CK
-&& replace next 1	DQTP with thisform.text4.value - thisform.text7.value,;
-&& 				DQJS with thisform.text5.value - thisform.text8.value,;
-&& 				DQZL with thisform.text6.value - thisform.text9.value,;
+&& replace next 1	DQTP with thisform.text4.value - (AllTrim(ThisForm.Text7.Value)),;
+&& 				DQJS with (AllTrim(ThisForm.Text5.Value)) - (AllTrim(ThisForm.Text8.Value)),;
+&& 				DQZL with (AllTrim(ThisForm.Text6.Value)) - thisform.text9.value,;
 && 				YSJE with YSJE + thisForm.text9.value * JFDJ * (CtoD(Left(lcDateTime, 8) ) - JFRQ + 1)
 && flush
 &&
@@ -99,8 +116,8 @@ EndCase
 && replace next 1	PH   with thisForm.text1.value,;
 && 				DT   with CtoT(lcDateTime),;
 && 				LX   with "出库",;
-&& 				TP   with -1 * thisForm.text7.value,;
-&& 				JS   with -1 * thisForm.text8.value,;
+&& 				TP   with -1 * (AllTrim(ThisForm.Text7.Value)),;
+&& 				JS   with -1 * (AllTrim(ThisForm.Text8.Value)),;
 && 				ZL   with -1 * thisForm.text9.value,;
 && 				CKMC with CK.CKMC,;
 && 				EMP  with thisForm.emp

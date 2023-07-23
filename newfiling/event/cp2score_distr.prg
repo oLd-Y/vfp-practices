@@ -9,29 +9,34 @@ lcScoreDistrPath = lcEventPath + "score_distr\"
 && 修改 score_distr
 ASelObj(laForm,1)
 loForm = laForm[1]
-loPageFrame = loForm.PageFrame1
-loPage = loPageFrame.Page1
-loGrid1 = loPage.Grid1
+loPageFrame1 = loForm.PageFrame1
+loPage1 = loPageFrame1.Page1
+loGrid1 = loPage1.Grid1
 
 && Form1
 If File(lcScoreDistrPath + "Form1/Load.prg")
-    m.Form1_Load = fileToStr(lcScoreDistrPath + "Form1/Load.prg")
-    loForm.writeMethod("Load", m.Form1_Load)
+    m.readFile = fileToStr(lcScoreDistrPath + "Form1/Load.prg")
+    loForm.writeMethod("Load", m.readFile)
 EndIf
 
 
-&& ----------------------------------  导出为Excel按钮 -------------------------------------
-loCommand1 = loPage.Command1
+
+&& Form1.PageFrame1.Page1.Command1
+loCommand1 = loPage1.Command1
+&& Click
 If File(lcScoreDistrPath + "Form1/PageFrame1/Page1/Command1/Click.prg")
-    m.Command1_Click = fileToStr(lcScoreDistrPath + "Form1/PageFrame1/Page1/Command1/Click.prg")
-    loCommand1.writeMethod("Click", m.Command1_Click)
+    m.readFile = fileToStr(lcScoreDistrPath + "Form1/PageFrame1/Page1/Command1/Click.prg")
+    loCommand1.writeMethod("Click", m.readFile)
 EndIf
 
-&& ---------------------------------- 查看详情按钮 -------------------------------------
-loCommand2 = loPage.Command2
+
+
+&& Form1.PageFrame1.Page1.Command2
+loCommand2 = loPage1.Command2
+&& Click
 If File(lcScoreDistrPath + "Form1/PageFrame1/Page1/Command2/Click.prg")
-    m.Command2_Click = fileToStr(lcScoreDistrPath + "Form1/PageFrame1/Page1/Command2/Click.prg")
-    loCommand2.writeMethod("Click", m.Command2_Click)
+    m.readFile = fileToStr(lcScoreDistrPath + "Form1/PageFrame1/Page1/Command2/Click.prg")
+    loCommand2.writeMethod("Click", m.readFile)
 EndIf
 
 

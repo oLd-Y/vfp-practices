@@ -25,7 +25,9 @@ close data
 &&                 volu_code2 into university2, ;
 &&                 volu_code3 into university3
 
-
+Public true, false
+true = .T.
+false = .F.
 
 use file_info in 8
 

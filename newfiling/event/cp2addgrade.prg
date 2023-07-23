@@ -8,33 +8,44 @@ modi form addgrade Nowait
 ASelObj(laForm,1)
 
 
-&& -------------------------- Form1 --------------------------------
+&& Form1
 loForm1 = laForm[1]
 && Load
 If File(lcAddGradePath + "Form1/Load.prg")
-    m.Form1_Load = fileToStr(lcAddGradePath + "Form1/Load.prg")
-    loForm1.writeMethod("Load", m.Form1_Load)
+    m.readFile = fileToStr(lcAddGradePath + "Form1/Load.prg")
+    loForm1.writeMethod("Load", m.readFile)
 EndIf
 
 && QueryUnload
 If File(lcAddGradePath + "Form1\QueryUnload.prg")
-    m.Form1_QueryUnload = fileToStr(lcAddGradePath + "Form1\QueryUnload.prg")
-    loForm1.writeMethod("QueryUnload", m.Form1_QueryUnload)
+    m.readFile = fileToStr(lcAddGradePath + "Form1\QueryUnload.prg")
+    loForm1.writeMethod("QueryUnload", m.readFile)
 EndIf
 
 && Init
 If File(lcAddGradePath + "Form1\Init.prg")
-    m.Form1_Init = fileToStr(lcAddGradePath + "Form1\Init.prg")
-    loForm1.writeMethod("Init", m.Form1_Init)
+    m.readFile = fileToStr(lcAddGradePath + "Form1\Init.prg")
+    loForm1.writeMethod("Init", m.readFile)
 EndIf
 
-&& -------------------------- Command1 --------------------------------
+&& Unload
+If File(lcAddGradePath + "Form1\Unload.prg")
+    m.readFile = fileToStr(lcAddGradePath + "Form1\Unload.prg")
+    loForm1.writeMethod("Unload", m.readFile)
+EndIf
+
+
+
+&& Form1.Command1
 loCommand1 = loForm1.Command1
 && Click
-If File(lcAddGradePath + "Command1\Click.prg")
-    m.Command1_Click = fileToStr(lcAddGradePath + "Form1\Command1\Click.prg")
-    loCommand1.writeMethod("Click", m.Command1_Click)
+If File(lcAddGradePath + "Form1/Command1/Click.prg")
+    m.readFile = fileToStr(lcAddGradePath + "Form1/Command1/Click.prg")
+    loCommand1.writeMethod("Click", m.readFile)
 EndIf
 
-Release l0Form1
+
+
+
+Release loForm1
 
